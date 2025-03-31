@@ -23,10 +23,13 @@ define ([
 	'session',
 	'text!libs/framework/templates/app/ventaRetail/taskFallaDetailRetailTemplate.html',
 	'text!libs/framework/templates/app/ventaRetail/paneles/listExAfiliadosTable.html',
+    '/form-smg-commons/js/libs/services/obraSocialService.js',
+	'libs/framework/views/app/ventaRetail/util/cotizadorUtil'
 ], function ($, _, Backbone, Handlebars, bootstrap, ace, Encoding, SettingsModel, InboxService, FuseService,
-			VentarRetailUtil, ViewConfiguration, AsyncProcessor, AjaxScreenLockUtil, Util, formShowTemplate,
-			 taskDetailTemplate, taskDetailIntegrantesTemplate, taskDetailPlanesTemplate, taskNotFoundTemplate,
-			 LoginService, Session, taskFallaDetailRetailTemplate, ListaControlExAfiliados) {
+			VentarRetailUtil, ViewConfiguration, AsyncProcessor, AjaxScreenLockUtil, Util, formShowTemplate, 
+			taskDetailTemplate, taskDetailIntegrantesTemplate, taskDetailPlanesTemplate,
+			taskNotFoundTemplate, LoginService, Session, taskFallaDetailRetailTemplate, 
+			ListaControlExAfiliados,ObraSocialService,CotizadorUtil) {
 
 	var idProcess;
 	var processTypes;
@@ -111,6 +114,11 @@ define ([
 			var complete = function () { }
 			
 			FuseService.getDetallePorProcessId(self.processId, true, success, error, complete)
+		},
+
+		getCotizacion: function (onSuccess) {
+			var self = this;
+			CotizadorUtil.obtenerCotizacion(self.processDetail.cotizacion.id, onSuccess, self);
 		},
 		
 		fixDomicilios: function() {
@@ -261,6 +269,10 @@ define ([
 			asyncFunctions.push(function(successFunction, context) {
 				self.getProcessConfiguration(successFunction);
 			});
+
+			asyncFunctions.push(function(successFunction, context) {
+				self.loadObrasSociales(successFunction);
+			});
 			
 			asyncFunctions.push(function(successFunction, context) {
 				self.getViewConfiguration(successFunction);
@@ -296,6 +308,10 @@ define ([
 
 			asyncFunctions.push(function(successFunction, context) {			
 				self.getAseguradoras(successFunction);
+			});
+
+			asyncFunctions.push(function(successFunction, context) {			
+				self.getCotizacion(successFunction);
 			});
 
 			asyncFunctions.push(function(successFunction, context) {			
@@ -460,6 +476,12 @@ define ([
 			});
 			
 			this.$el.html(compiledTemplate({ context: self }));
+			self.titular=self.buildTitular(self.processDetail);
+
+			if(self.detalleCotizacion){
+				self.ultimaCotizacion=self.processCoticacion(self.detalleCotizacion);
+			}
+			
 			this.$el.find('#processDetail').html(subPageTemplate({ context: self }));
 			if(self.processDetail.condExAfi){
 				self.renderListaExAfliados();
@@ -472,6 +494,66 @@ define ([
 			return this;
 		},
 
+		buildTitular: function(processDetail){
+			var self=this;
+			var titular={};
+			for (var i = 0; i < processDetail.integrantes.length; i++) {
+				var integrante = processDetail.integrantes[i];
+				if(integrante.tipo_inte === "T"){
+					titular=integrante;
+					break;
+				}
+			}
+
+			if (self.obrasSociales && processDetail.integrantes) {
+				processDetail.integrantes.forEach(function(integrante) {
+					if (integrante.cond_afi <= 0 ) {
+						integrante.cond_description = "DIRECTO";
+					} else {
+						for (var i = 0; i < self.obrasSociales.length; i++) {
+							var obraSocial = self.obrasSociales[i];
+							if (obraSocial.codigoSSSalud === integrante.cond_afi) {
+								integrante.cond_description = obraSocial.descripcion;
+							}
+						}
+					}
+				});
+			}
+			
+			return titular
+		},
+
+		processCoticacion:function(detalleCotizacion){
+			var self=this;
+			self.detalleCotizacion.planesSeleccionados = [];
+			self.detalleCotizacion.fecha=self.processDetail.altaFecha;
+			self.detalleCotizacion.tarea=self.processDetail.tarea.descripcion;
+			var planesSelected = self.processDetail.planVenta? self.processDetail.planVenta.split(",") : [];
+			planesSelected.length > 1? planesSelected.pop() : null;
+
+			$.each(detalleCotizacion.planes, function (key, plan) {
+				if (planesSelected.includes(plan.codigo) || planesSelected.includes(plan.PLAN_OS)) {
+					plan.valorTotalString=self.changeDecimalSeparator(plan.valorTotalPlan.toString());
+					self.detalleCotizacion.planesSeleccionados.push(plan);
+				}
+			});
+
+			detalleCotizacion.integrantes.forEach(function(integrante) {
+				var condicion = integrante.ID_CONDICION || integrante.obraSocial;
+				if (!condicion) {
+					integrante.cond_description = "DIRECTO";
+				} else {
+					for (var i = 0; i < self.obrasSociales.length; i++) {
+						var obraSocial = self.obrasSociales[i];
+						if (obraSocial.codigoSSSalud === condicion)  {
+							integrante.cond_description = obraSocial.descripcion;
+						}
+					}
+				}
+			});
+
+			return detalleCotizacion;
+		},
 		renderProcessDetailFalla: function () {
 			
 			var self = this;
@@ -620,6 +702,18 @@ define ([
 			successFunction()
 		},
 
+		loadObrasSociales: function (successFunction) {
+			var self = this;
+            var version = 2;
+			CotizadorUtil.loadObrasSociales(version, function (obrasSociales) {
+				self.obrasSociales = obrasSociales;  
+		
+				if (successFunction) {
+					successFunction();
+				}
+			});
+		},
+
 		getDocumentacionFaltante: function (onSuccess) {
 			var self = this;
 			$.ajax({
@@ -662,7 +756,7 @@ define ([
 			var compiledTemplate = Handlebars.compile(ListaControlExAfiliados);
 			target.empty();
 
-			target.append(compiledTemplate({ context: self }));
+			target.append(compiledTemplate({ context: self, hasExAfiliadosData: self.hasExAfiliadosData }));
 		},
 
 		filtrarDetExAfiliados: function (successFunction) {
@@ -702,9 +796,11 @@ define ([
 						}
 
 						if (objeto.monto_notificado != 0) {
-							objeto.monto_notificado = self.changeDecimalSeparator(objeto.monto_notificado.toString());
+							objeto.monto_notificado_format = self.changeDecimalSeparator(objeto.monto_notificado.toString());
+						} else {
+							objeto.monto_notificado_format = '0';
 						}
-						objeto.monto_vig_config = self.changeDecimalSeparator(objeto.monto_vig_config.toString());
+						// objeto.monto_vig_config = self.changeDecimalSeparator(objeto.monto_vig_config.toString());
 					}
 					var fechaActual = new Date();
 
@@ -713,7 +809,16 @@ define ([
 					}
 
 					objeto.isBloqueante = self.validBloqueante(objeto);
+					
+					if (objeto.isBloqueante || objeto.bloqueante) {
+						isBloqueante = true;
+					}
 				}
+
+				var allNonBlockingNoDebt = !isBloqueante && Object.values(deudasPorDni).every(function(deuda) { return deuda === 0; });
+
+				// Si hay datos de ex afiliados pero todos son no bloqueantes y sin deuda
+				self.hasExAfiliadosData = (self.detalle.condExAfi && self.detalle.condExAfi.length > 0 && allNonBlockingNoDebt);
 
 				for (var i = self.detalle.condExAfi.length - 1; i >= 0; i--) {
 					var objeto = self.detalle.condExAfi[i];
@@ -721,6 +826,8 @@ define ([
 						self.detalle.condExAfi.splice(i, 1);
 					}
 				}
+			} else {
+				self.hasExAfiliadosData = false;
 			}
 			
 			successFunction();

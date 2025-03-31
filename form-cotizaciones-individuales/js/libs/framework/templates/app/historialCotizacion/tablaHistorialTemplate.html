@@ -3,6 +3,7 @@
         <tr>
             <th></th>
             <th>Canal Cotizaci&oacute;n</th>
+            <th>N&deg; de Tr&aacute;mite</th>
             <th>Fecha Cotizaci&oacute;n</th>
             <th>Zona</th>
             <th>C&aacute;pitas</th>
@@ -13,8 +14,9 @@
     <tbody class="bodyTable">
         {{#each context.cotizacionesList}}
         <tr>
-            <td width="1%"><i class="icon-file red bigger-110"></i></td>
+            <td width="1%">{{#ifCond this.procesoRelacionadoIdAbierto true}}<i class="icon-unlock green bigger-110"></i>{{else}}<i class="icon-lock red bigger-110"></i>{{/ifCond}}</td>
             <td>{{this.canal}}</td>
+            <td>{{this.procesoRelacionadoId}}</td>
             <td>{{dateFormat this.create 'DD/MM/YYYY HH:mm'}}</td>
             <td>{{this.zona}}</td>
             <td>{{this.capitas}}</td>
@@ -38,7 +40,7 @@
 <script>
     {{#if context.cotizacionesList}}
     var oTable1 = $('#gridCotizaciones').dataTable( {
-        "aoColumns": [{ "bSortable": false },null,null,null,null,null,null]
+        "aoColumns": [{ "bSortable": false },null,null,null,null,null,null,null]
     } );
     {{/if}}
 </script>

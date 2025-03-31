@@ -1,9 +1,12 @@
 <style>
     #listExAfiliadosTableContainer {
-        overflow-x: auto; /* Agrega la barra espaciadora */
+        overflow-x: auto;
+    }
+
+    .thick-border {
+        font-weight: bolder;
     }
 </style>
-{{#ifCond context.detalleProspecto true}}
 <table class="table table-striped table-bordered table-hover">
     <tbody>
         <thead>
@@ -11,7 +14,7 @@
                 <td colspan="4" style="text-align:left;color:white;"><b>Datos del Prospecto</b></td>
             </tr>
         </thead>
-        <tr>
+        <tr class="thick-border">
             <td class="span2">Apellido y Nombre:</td>
 
             <td class="span4">{{context.prospecto.apellido}}, {{context.prospecto.nombre}}</td>
@@ -19,6 +22,33 @@
             <td class="span2">{{context.prospecto.docTipo}}:</td>
 
             <td class="span4">{{context.prospecto.docNum}}</td>
+        </tr>
+        <tr>
+            <td class="span2">Genero:</td>
+
+            <td class="span4">{{#ifCond context.titular.genero 'M'}} Masculino {{else}} Femenino {{/ifCond}} </td>
+
+            <td class="span2">Edad:</td>
+
+            <td class="span4">{{context.titular.edad}}</td>
+        </tr>
+        <tr>
+            <td class="span2">Fecha de Nacimiento:</td>
+
+            <td class="span4">{{prettifyDate context.titular.fecha_nac}}</td>
+
+            <td class="span2">Codicion de Afiliado:</td>
+
+            <td class="span4">{{context.titular.cond_description}}</td>
+        </tr>
+        <tr>
+            <td class="span2">Remuneración bruta:</td>
+
+            <td class="span4">{{#ifCond context.titular.remuneracion 0}} - {{else}} $ {{changeDecimalSeparator context.titular.remuneracion}} {{/ifCond}}</td>
+
+            <td class="span2">Tipo de integrante:</td>
+
+            <td class="span4">{{descParentescoCotizacion context.titular.tipo_inte}}</td>
         </tr>
         <tr>
             <td class="span2">Pa&iacute;s:</td>
@@ -55,12 +85,126 @@
         </tr>
     </tbody>
 </table>
-{{/ifCond}}
+
+
+{{#if context.processDetail.integrantes}}
+<table class="table table-striped table-bordered table-hover">
+    <tbody>
+        <thead>
+            <tr class="center" style="background-color: dimgrey;">
+                <td colspan="4" style="text-align:left;color:white;"><b>Datos del Grupo Familiar</b></td>
+            </tr>
+        </thead>
+        {{#each context.processDetail.integrantes}}
+            {{#ifNotCond this.tipo_inte "T"}} 
+            <tr class="thick-border">
+                <td class="span2">Apellido y Nombre:</td>
+
+                <td class="span4">{{this.apellido}}, {{this.nombre}}</td>
+
+                <td class="span2">{{this.tipo_doc}}:</td>
+
+                <td class="span4">{{this.num_doc}}</td></td>
+            </tr>
+            <tr>
+                <td class="span2">Genero:</td>
+
+                <td class="span4">{{#ifCond this.genero 'M'}} Masculino {{else}} Femenino {{/ifCond}} </td>
+
+                <td class="span2">Edad:</td>
+
+                <td class="span4">{{this.edad}}</td>
+            </tr>
+            <tr>
+                <td class="span2">Fecha de Nacimiento:</td>
+
+                <td class="span4">{{prettifyDate this.fecha_nac}}</td>
+
+                <td class="span2">Codicion de Afiliado:</td>
+
+                <td class="span4">{{this.cond_description}}</td>
+            </tr>
+            <tr>
+                <td class="span2">Remuneración bruta:</td>
+
+                <td class="span4">{{#ifCond this.remuneracion 0}} - {{else}} $ {{changeDecimalSeparator this.remuneracion}} {{/ifCond}}</td>
+                
+                <td class="span2">Tipo de integrante:</td>
+
+                <td class="span4">{{descParentescoCotizacion this.tipo_inte}}</td>
+            </tr>
+            {{/ifNotCond}}
+        {{/each}}
+       
+    </tbody>
+</table>
+{{/if}}
 <div id="listExAfiliadosTableContainer"> </div>
 <hr>
 <div id="accordion2" class="accordion">
     <div class="accordion-group">
+        {{#if context.ultimaCotizacion}}
+        <div class="accordion-heading">
+            <a href="#collapseCotizacion" data-toggle="collapse"  class="accordion-toggle collapsed" style="border-top: 1px solid #c5d0dc;">
+                Detalle Cotización
+            </a>
+        </div>
+        <div class="accordion-body collapse"  id="collapseCotizacion">
+            <div class="accordion-inner">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="span4"><b>Detalle de Cápitas</b></td>
 
+                        <td class="span4"><b>Edad</b></td>
+
+                        <td class="span4"><b>Tipo Cliente</b></td>                            
+                    </tr>
+                    {{#each context.ultimaCotizacion.integrantes}}
+                    <tr>
+                        <td class="span4">{{this.parentescoDescripcion}}</td>
+
+                        <td class="span4">{{this.edad}}</td>
+
+                        <td class="span4">{{this.cond_description}}</td>
+                    </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+                <h5>{{ context.ultimaCotizacion.tarea }} {{prettifyDate  context.ultimaCotizacion.fecha}}</h5>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="span6">Plan</th>
+                            <th class="span6">Monto Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bodyTable">
+                        {{#each context.ultimaCotizacion.planesSeleccionados}}
+                        <tr>
+                            <td>
+                                {{#if this.codigo}}
+                                    {{this.codigo}}
+                                {{else}}
+                                    {{this.PLAN_OS}}
+                                {{/if}}
+                            </td>
+                            <td>
+                                $ {{#if this.valorTotalString}}
+                                    {{this.valorTotalString}}
+                                {{else}}
+                                    {{this.TOTAL_A_COBRAR}}
+                                {{/if}}
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{/if}}
         {{#each context.processesDetail}}
         <div class="accordion-heading">
             <a href="#collapse{{this.idEtapa}}" data-toggle="collapse" class="accordion-toggle {{#ifNotCond ../context.processesDetail.0.idEtapa this.idEtapa}}collapsed{{/ifNotCond}}" style="border-top: 1px solid #c5d0dc;">
