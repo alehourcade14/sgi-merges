@@ -152,13 +152,12 @@ define ([
 				acciones.mostrarTransicionarStepTres = true;
 				if(self.context.viewConfig.taskName === "Cerrar Venta"){
 					acciones.mostrarDocumentacionFaltante=true;
+				}
+				if( self.context.viewConfig.taskName === 'Contactar' ) {
+					acciones.enviarLink=false;
+				} else {
 					acciones.enviarLink=true;
 				}
-
-				if(self.context.viewConfig.taskName === "Entrevistar"){
-					acciones.enviarLink=true;
-				}
-
 				$("#wizard-acciones").html(compiledTemplate({ acciones: acciones , context: self.context}));
 			}
 			onSuccess();	

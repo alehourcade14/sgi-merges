@@ -5,7 +5,7 @@ define ([
 	     'util',
 ], function ($, _, Backbone, Util) {
 
-	var VentaSaludUtil = Backbone.Model.extend ({
+	var VentaEccoUtil = Backbone.Model.extend ({
 		
 		isNull: function(object) {
 			return (object === undefined || object == null);
@@ -189,9 +189,10 @@ define ([
 			}
 			var process = processesDetail.reverse();
 			successFunction();
-		}
+		},
+
 	}); // Finaliza el extend 
 
-	return new VentaSaludUtil();	
+	return new VentaEccoUtil();	
 });
-//# sourceURL=/form-venta-ecco-ap/js/libs/framework/views/util/VentaSaludUtil.js
+//# sourceURL=/form-venta-ecco-ap/js/libs/framework/views/util/ventaEccoUtil.js

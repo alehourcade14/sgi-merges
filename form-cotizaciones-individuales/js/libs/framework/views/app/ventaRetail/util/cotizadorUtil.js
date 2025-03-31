@@ -208,12 +208,12 @@ define([
             integrantesNew = [];
             for (var i = 0; i < integrantes.length; i++) {
                 var integrante = {};
-                integrante.deno_paren =  integrantes[i].DENO_PAREN;
-                integrante.remuneracion =  integrantes[i].REMUNERACION;
+                integrante.parentescoDescripcion =  integrantes[i].DENO_PAREN;
+                integrante.sueldoBruto =  integrantes[i].REMUNERACION;
                 integrante.edad =  integrantes[i].EDAD;
                 integrante.parentesco =  integrantes[i].PARENTEZCO;
                 if(integrantes[i].ID_CONDICION){
-                    integrante.remuneracion = integrantes[i].REMUNERACION;
+                    integrante.sueldoBruto = integrantes[i].REMUNERACION;
                     integrante.ID_CONDICION =  integrantes[i].ID_CONDICION;
                 }
                 integrantesNew.push(integrante);
@@ -233,7 +233,7 @@ define([
             const integrantes = this.detalleCotizacion.integrantes || [];
             const reemplazarIdCondicion = this.verificarRecotizacionSMG(integrantes);
 
-            // Mapea los datos de integrantes con la lÃ³gica de reemplazo por SMG
+            // Mapea los datos de integrantes con la lógica de reemplazo por SMG
             return integrantes.map((integrante, index) => {
                 let idCondicion = integrante.ID_CONDICION;
         
@@ -247,13 +247,13 @@ define([
                     sexo: integrante.sexo || "M",
                     edad: integrante.edad || null,
                     obraSocial: idCondicion === -1 ? null : Number(idCondicion) || null,
-                    remuneracion: integrante.remuneracion || 0
+                    remuneracion: integrante.sueldoBruto || 0
                 };
             });
         },
 
         verificarRecotizacionSMG: function(integrantes) {
-            // Verifica si hay algÃºn ID_CONDICION vÃ¡lido (no null) distinto de SMG
+            // Verifica si hay algún ID_CONDICION válido (no null) distinto de SMG
             for (let i = 0; i < integrantes.length; i++) {
                 const idCondicion = integrantes[i].ID_CONDICION;
                 if (idCondicion !== undefined && idCondicion != SMG) {
