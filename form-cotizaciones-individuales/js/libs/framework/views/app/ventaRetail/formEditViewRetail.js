@@ -345,7 +345,14 @@ define ([
 							self.tasksConfig = processTypes[i].tasks;
 							for (var x = 0; x < self.tasksConfig.length; x++) {
 								if (self.tasksConfig[x].taskName === self.task.name) {
-									self.task.actions = self.tasksConfig[x].actions;
+									debugger
+									if (self.isDdjj === "true") {
+										// Filtrar acciones con ddjj === true o undefined
+										self.task.actions = self.tasksConfig[x].actions.filter(action => action.ddjj === true || action.ddjj === undefined);
+									} else {
+										// Filtrar acciones con ddjj === false o undefined
+										self.task.actions = self.tasksConfig[x].actions.filter(action => action.ddjj === false || action.ddjj === undefined);
+									}
 									self.task.config = self.tasksConfig[x];
 									self.task.tarea =self.tasksConfig[x].id;
 								}
@@ -727,7 +734,7 @@ define ([
 			
 			var self = this;
 			var panelActivo = $('.ace-wizard').find('li.active').attr('data-target');
-
+			debugger
 			var countPlanes = self.checkPlanes();
 			var validoContactar=true;
 			if(($("#actions option:selected").val() === "aEntrevistar" || $("#actions option:selected").val() == "aCerradoSinVenta") && !self.omitirCompletarProspecto && panelActivo == "#step1-contactar"){
@@ -843,6 +850,7 @@ define ([
 		},
 		
 		initView: function() {
+			debugger
 	
 			var self = this;
 			
@@ -869,9 +877,13 @@ define ([
 			});
 
 			asyncFunctions.push(function(successFunction, context) {
+				self.isDdjj(successFunction);
+			});
+
+			asyncFunctions.push(function(successFunction, context) {
 				self.getProcessConfiguration(successFunction);
 			});
-			
+
 			asyncFunctions.push(function(successFunction, context) {
 				self.getViewConfiguration(successFunction);
 			});
@@ -916,8 +928,9 @@ define ([
                 Si la tarea es contactar se consulta si se tiene que omitir completar
                 el prospecto
                  */
-				if (self.task.name === "Contactar")
+				if (self.task.name === "Contactar"){
 					self.isOmitirCompletarProspecto(successFunction);
+				}
 				else {
 					self.omitirCompletarProspecto = false;
 					successFunction();
@@ -1002,6 +1015,20 @@ define ([
 			//servicio que obtiene las variable del proceso segun el nombre
 			FuseService.getVariableByName(self.processId, "completaProspecto", false, success, error, null);
 		},
+
+		isDdjj: function (successFunction) {
+			var self = this;
+			var success = function (variable) {
+				self.isDdjj = variable.stringValue;
+				successFunction();
+			};
+			var error = function (error) {
+				self.isDdjj = false;
+				successFunction();
+			};
+			
+			FuseService.getVariableByName(self.processId, "ddjj", false, success, error, null);
+		},
 		
 		initPanels: function(successFunction) {
 			
@@ -1010,7 +1037,7 @@ define ([
 			self.panelViews = [];
 
 			self.actionStepUnoContactarList = self.actionStepUnoContactar;
-			self.actionStepDosContactarList = self.actionStepDosContactar;
+			self.actionStepDosContactarList = self.task.actions.filter(action => !action.cotizo);
 			
 			self.omitirCompletarProspecto = self.omitirCompletarProspecto && self.task.name === "Contactar";
 			

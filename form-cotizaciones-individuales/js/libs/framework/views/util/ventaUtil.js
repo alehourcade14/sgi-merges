@@ -167,6 +167,10 @@ define ([
 			var inicioFix = false;
 			var contactarFix = false;
 			var entrevistarFix = false;
+			var entrevistarFix = false;
+			var comercializarFix = false;
+			var generarAltaFix = false;
+
 			var process = processesDetail.reverse();
 			if(process[0].tarea && process[0].tarea.id != 0){
 				for(var i=0;i<process.length;i++){
@@ -183,7 +187,19 @@ define ([
 					if(process[i].tarea.id == 3 && !entrevistarFix){
 						process[i].tarea.id = 2;
 						process[i].tarea.descripcion = 'Entrevistar';
-						inicioFix = true;
+						entrevistarFix = true;
+					}
+
+					if(process[i].tarea.id == 6 && !comercializarFix){
+						process[i].tarea.id = 1;
+						process[i].tarea.descripcion = 'Contactar';
+						comercializarFix = true;
+					}
+
+					if(process[i].tarea.id == 7 && !generarAltaFix){
+						process[i].tarea.id = 6;
+						process[i].tarea.descripcion = 'Comercializar';
+						generarAltaFix = true;
 					}
 				}
 			}

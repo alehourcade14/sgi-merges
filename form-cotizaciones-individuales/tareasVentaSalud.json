@@ -22,5 +22,21 @@
     {
         "id": "5",
         "descripcion": "Finalizado sin Venta"
+    },
+    {
+        "id": "6",
+        "descripcion": "Comercializar"
+    },
+    {
+        "id": "7",
+        "descripcion": "Gestionar Alta"
+    },
+    {
+        "id": "8",
+        "descripcion": "Analizar Ingreso DDJJ"
+    },
+    {
+        "id": "9",
+        "descripcion": "Solicitar Documentacion Medica"
     }
 ]

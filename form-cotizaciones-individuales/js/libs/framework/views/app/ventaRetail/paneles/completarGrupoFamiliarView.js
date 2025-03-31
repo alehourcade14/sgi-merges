@@ -128,7 +128,8 @@ define([
 
                 function (successFunction, context) {
                     // si se omite completar el prospecto y si viene de una etapa sin cotizacion hay que cargar los botones de accion
-                    if (self.context.omitirCompletarProspecto || (self.context.task.name == 'Entrevistar' && (self.context.integrantes == undefined || self.context.integrantes == 0)))
+                    //*QUITAR ENTREVISTAR CUANDO NO EXISTAN TRAMITES DE VERSIONES ANTERIORES*
+                    if (self.context.omitirCompletarProspecto || ((self.context.task.name == 'Entrevistar' || self.context.task.name == 'Comercializar') && (self.context.integrantes == undefined || self.context.integrantes == 0)))
                         self.renderTemplateAccions(successFunction, context);
                     else
                         successFunction();
@@ -192,7 +193,7 @@ define([
 			//Para evitar la accion 'Entrevistar' recientemente incorporada en mostrarActionStepDosContactar
             if(panelActivo == '#step1-entrevistar'){
                 acciones.mostrarContacto = true;
-                context.actionStepDosContactarList = self.actionStepUnoEntrevistar
+                context.actionStepDosContactarList = context.task.actions;
                 acciones.mostrarSiguiente = false;
                 acciones.mostrarCotizar = true;
             }

@@ -240,6 +240,66 @@ define ([
 	    		}
 			},
 			{
+	            taskName: "Comercializar",
+	            panels: [entrevistarView, completarGrupoFamiliarView, detalleCotizacion],
+	            rules: {
+	    			"process[action]": {
+	    				required: true
+					},				
+					'solicitudCotizacion[zona][id]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][parentesco]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][sexo]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][edad]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
+						required: true
+					},
+					
+					'ventaSalud[motivoNoVenta]':{
+						required: true
+					},
+					'contacto':{
+						required: true
+					}
+	    		},
+	    		messages: {
+	    			"process[action]" : {
+	    				required : " "
+					},
+					'solicitudCotizacion[zona][id]':{
+						required: "Ingrese la Zona."
+					},
+					'solicitudCotizacion[grupoFamiliar][][parentesco]':{
+						required: "Ingrese el Tipo de Integrante."
+					},
+					'solicitudCotizacion[grupoFamiliar][][edad]':{
+						required: "Ingrese la Edad."
+					},
+					'solicitudCotizacion[grupoFamiliar][][sexo]':{
+						required: "Ingrese el Sexo."
+					},
+					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
+						required: "Ingrese la Condición de Afiliación."
+					},
+					'ventaSalud[motivoNoVenta]':{
+						required: "Ingrese un motivo."
+					},
+					'contacto':{
+						required: "Ingrese el Contacto."
+					}
+	    		}
+			},
+			{
 	            taskName: "Cerrar Venta",
 	            panels: [entrevistarView, completarGrupoFamiliarView, detalleCotizacion],
 	            rules: {
@@ -288,7 +348,85 @@ define ([
 						required: "Ingrese un motivo."
 					}
 	    		}
-			}
+			},
+			{
+	            taskName: "Gestionar Alta",
+	            panels: [entrevistarView, completarGrupoFamiliarView, detalleCotizacion],
+	            rules: {
+	    			"process[action]": {
+	    				required: true
+					},				
+					'solicitudCotizacion[zona][id]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][parentesco]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][sexo]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][edad]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
+						required: true
+					},
+					'ventaSalud[motivoNoVenta]':{
+						required: true
+					}
+	    		},
+	    		messages: {
+	    			"process[action]" : {
+	    				required : " "
+					},
+					'solicitudCotizacion[zona][id]':{
+						required: "Ingrese la Zona."
+					},
+					'solicitudCotizacion[grupoFamiliar][][parentesco]':{
+						required: "Ingrese el Tipo de Integrante."
+					},
+					'solicitudCotizacion[grupoFamiliar][][edad]':{
+						required: "Ingrese la Edad."
+					},
+					'solicitudCotizacion[grupoFamiliar][][sexo]':{
+						required: "Ingrese el Sexo."
+					},
+					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
+						required: "Ingrese la Condición de Afiliación."
+					},
+					'ventaSalud[motivoNoVenta]':{
+						required: "Ingrese un motivo."
+					}
+	    		}
+			},
+			{
+	            taskName: "Analizar Ingreso DDJJ",
+	            panels: [
+					//nuevos paneles para esta tarea
+				],
+	            rules: {
+					//nuevos reglas de validacion para esta tarea
+
+				},
+	    		messages: {
+					//nuevos mensajes de validacion para esta tarea
+	    			
+	    		}
+			},
+			{
+	            taskName: "Solicitar Documentacion Medica",
+	            panels: [
+					//nuevos paneles para esta tarea
+				],
+	            rules: {
+					//nuevos reglas de validacion para esta tarea
+
+				},
+	    		messages: {
+					//nuevos mensajes de validacion para esta tarea
+	    			
+	    		}
+			},
 		],
 		
 		
