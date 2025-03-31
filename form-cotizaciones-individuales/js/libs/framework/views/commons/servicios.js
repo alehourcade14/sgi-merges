@@ -90,12 +90,28 @@ define([
 					} else if ( data.datosFiliatorios.length > 1 && dni && !apellido) {
 						datosDniMerlin.valido = true;
 					} else if ( data.datosFiliatorios.length > 1 && dni && apellido ) {
-						var text = personaFisica ? 'El DNI y apellido ingresado no son v&aacute;lidos.' : 'El CUIT ingresado no es v&aacute;lido.'
-						$.gritter.add({
-							title: '<i class="icon-exclamation-sign bigger-120"></i>&nbsp;Atención',
-							text: text,
-							class_name: 'gritter-warning'
-						});
+						var apellidoEncontrado = false;
+						var prospectoExistente = null;
+						for (let i = 0; i < data.datosFiliatorios.length; i++) {
+							if (data.datosFiliatorios[i].apellido && 
+								data.datosFiliatorios[i].apellido.toLowerCase() === apellido.toLowerCase()) {
+								apellidoEncontrado = true;
+								prospectoExistente = data.datosFiliatorios[i];
+								break;
+							}
+						}
+						if (!apellidoEncontrado) {
+							var text = personaFisica ? 'El DNI y apellido ingresado no son v&aacute;lidos.' : 'El CUIT ingresado no es v&aacute;lido.'
+							$.gritter.add({
+								title: '<i class="icon-exclamation-sign bigger-120"></i>&nbsp;Atención',
+								text: text,
+								class_name: 'gritter-warning'
+							});
+						} else {
+							data.datosFiliatorios = [prospectoExistente];
+							datosDniMerlin = data.datosFiliatorios;
+							datosDniMerlin.valido = true;
+						}
 					} else {
 						var text = personaFisica ? 'El DNI ingresado no es v&aacute;lido.' : 'El CUIT ingresado no es v&aacute;lido.'
 						$.gritter.add({

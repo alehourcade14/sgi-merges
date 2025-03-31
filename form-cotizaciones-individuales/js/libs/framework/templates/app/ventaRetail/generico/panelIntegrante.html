@@ -1,85 +1,138 @@
+<style>
+	.custom-width {
+		width: 18% !important; 
+	}
+</style>
 <div class="row-fluid integranteRow" style="position:relative;top:-22px;margin-bottom: -20px">
 	<hr style="margin: 10px 0;">
 	
-	<div class="control-group span3">
-		<label class="lblParentesco control-label span12" style="text-align:left;width: 200px;">
-			Seleccione tipo de integrante<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
-		</label>
-		<select class="selectParentesco span12" name="solicitudCotizacion[grupoFamiliar][][parentesco]">
-			{{#if primerIntegrante}}
-			<option value="T" {{#ifCond integrante.parentesco 'T'}}selected{{/ifCond}}>Titular</option>
-			{{else}}
-			{{#ifCond integrante.parentesco 'T'}}
-			<option value="T" {{#ifCond integrante.parentesco 'T'}}selected{{/ifCond}}>Titular</option>
-			{{else}}
-			<option value="E" {{#ifCond integrante.parentesco 'E'}}selected{{/ifCond}}>Cónyuge</option>
-			<option value="H" {{#ifCond integrante.parentesco 'H'}}selected{{/ifCond}}>Hijo</option>
-			<option value="M" {{#ifCond integrante.parentesco 'M'}}selected{{/ifCond}}>Hijo Mayor</option>
-			<option value="I" {{#ifCond integrante.parentesco 'I'}}selected{{/ifCond}}>Hijo Discapacitado</option>
-			<option value="C" {{#ifCond integrante.parentesco 'C'}}selected{{/ifCond}}>Fliar. a cargo</option>
-			{{/ifCond}}
-			{{/if}}
-		</select>
-	</div>
-
-	<div class="control-group span1" style="margin-bottom:2px !important;display:none">
-		<label class="lblSexo control-label span12" for="sexo" style="text-align:left">
-			Sexo<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
-		</label>
-		<select class="selectSexo span12" name="solicitudCotizacion[grupoFamiliar][][sexo]">
-			<option value="M" {{#ifCond integrante.sexo 'M'}}selected{{/ifCond}}>M</option>
-			<option value="F" {{#ifCond integrante.sexo 'F'}}selected{{/ifCond}}>F</option>
-		</select>
-	</div>
-
-	<div class="control-group span1" style="margin-bottom:2px !important">
-		<label class="lblEdad control-label span12" for="edad" style="text-align:left">
-			Edad<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
-		</label>
-		<input class="inputEdad input-mask-numbers span12" name="solicitudCotizacion[grupoFamiliar][][edad]"
-			type="text" data-type="integer" value="{{integrante.edad}}" maxlength="3" placeholder="Edad..." />
-	</div>
-
-	<div class="control-group span3" style="margin-bottom:2px !important">
-		<label class="lblCondicion control-label span12" style="text-align:left">
-			Condici&oacute;n de Afiliaci&oacute;n<i class="icon-asterisk red"
-				style="font-size: 10px;vertical-align: 5px;"></i>
-		</label>
-		<select class="selectCondicion span12" name="solicitudCotizacion[grupoFamiliar][][obraSocial]"
-			{{#unless primerIntegrante}}{{#ifNotCond integrante.parentesco 'T'}}{{#ifNotCond integrante.parentesco 'E'}}disabled{{/ifNotCond}}{{/ifNotCond}}{{/unless}}>
-			<option value="">Seleccion Condici&oacute;n</option>
-			<option value="-1"
-				{{#unless integrante.ID_CONDICION}}{{#ifCond integrante.parentesco 'T'}}selected{{/ifCond}}{{#ifCond integrante.parentesco 'E'}}selected{{/ifCond}}{{/unless}}>
-				Directo</option>
-			{{#each context.obrasSociales}}
-			<option value="{{this.codigoSSSalud}}" {{#ifCond ../integrante.ID_CONDICION this.codigoSSSalud}}selected{{/ifCond}}>
-				{{#ifEmpty this.institucion.razonSocial}}{{this.descripcion}}{{else}}{{this.institucion.razonSocial}}{{/ifEmpty}}
-			</option>
-			{{/each}}
-		</select>
-	</div>
-
-	<div class="control-group span2" style="margin-bottom:2px !important">
-		<label class="lblRemuneracion control-label span12" style="text-align:left">
-			Remuneraci&oacute;n Bruta
-		</label>
-		<input class="inputRemuneracion span12"
-			name="solicitudCotizacion[grupoFamiliar][][remuneracion]" class="input-mask-numbers span12"
-			maxlength="7" type="number" data-type="integer" placeholder="Remuneraci&oacute;n Bruta..."
-			{{#if integrante.ID_CONDICION}}value="{{integrante.sueldoBruto}}" {{/if}}
-			{{#unless integrante.ID_CONDICION}}disabled{{/unless}} />
-	</div>
-
-	<div class="control-group span1" style="margin-bottom:2px !important">
-		<div class="divAddIntegrante span6" style="display:none">
-			<span class="btnAddIntegrante middle tooltip-info" title="Agregar Integrante" style="cursor: pointer;"> <i
-					class="icon-plus-sign-alt green" style="font-size: 30px;padding-top: 24px;"></i> </span>
+	<div class="span12">
+		<div class="control-group span2 custom-width">
+			<label class="control-label span12" style="text-align:left;width: 100%;">
+				Tipo de Integrante<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
+			</label>
+			<select id="idParentesco{{nroIntegrante}}" class="selectParentesco span12" name="solicitudCotizacion[grupoFamiliar][][parentesco]" {{#if titular}}class="grey-background" readonly="readonly"  style="pointer-events:none;" value="T" {{/if}}>
+				{{#if primerIntegrante}}
+				<option value="T" {{#ifCond integrante.tipo_inte 'T'}}selected{{/ifCond}}>Titular</option>
+				{{else}}
+				{{#ifCond integrante.tipo_inte 'T'}}
+				<option value="T" {{#ifCond integrante.tipo_inte 'T'}}selected{{/ifCond}}>Titular</option>
+				{{else}}
+				<option value="E" {{#ifCond integrante.tipo_inte 'E'}}selected{{/ifCond}}>Cónyuge</option>
+				<option value="H" {{#ifCond integrante.tipo_inte 'H'}}selected{{/ifCond}}>Hijo</option>
+				<option value="M" {{#ifCond integrante.tipo_inte 'M'}}selected{{/ifCond}}>Hijo Mayor</option>
+				<option value="I" {{#ifCond integrante.tipo_inte 'I'}}selected{{/ifCond}}>Hijo Discapacitado</option>
+				<option value="C" {{#ifCond integrante.tipo_inte 'C'}}selected{{/ifCond}}>Fliar. a cargo</option>
+				{{/ifCond}}
+				{{/if}}
+			</select>
 		</div>
-		<div class="divDeleteIntegrante span6" style="display:none">
-			<span id="borrarIntegrante" class="btnDeleteIntegrante middle tooltip-info" title="Borrar Integrante" style="cursor: pointer;"> <i
-					class="icon-minus-sign-alt red" style="font-size: 30px;padding-top: 24px;"></i> </span>
+
+		<div class="control-group span2 custom-width">
+			<label class="control-label span12" style="text-align:left;">
+				Nombre
+			</label>
+			<input id="idNombre{{nroIntegrante}}" class="span12 txtNombre" {{#if titular}} value="{{context.context.prospecto.nombre}}" readonly {{else}} value="{{integrante.nombre}}" {{/if}} name="solicitudCotizacion[grupoFamiliar][][nombre]" type="text" placeholder="Nombre..."  {{#if integrante.validado}}readonly{{/if}}/>
+		</div> 
+ 
+		<div class="control-group span2 custom-width">
+			<label class="control-label span12" style="text-align:left;">
+				Apellido
+			</label>
+			<input id="idApellido{{nroIntegrante}}" class="span12 txtApellido" {{#if titular}} value="{{context.context.prospecto.apellido}}" readonly {{else}} value="{{integrante.apellido}}" {{/if}}  name="solicitudCotizacion[grupoFamiliar][][apellido]" type="text" placeholder="Apellido..." {{#if integrante.validado}}readonly{{/if}}/>
+		</div>
+
+		<div class="control-group span1">
+			<label class="control-label span12" style="text-align:left;">
+				Tipo {{#ifCond context.context.task.name 'Cerrar Venta'}}<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>{{/ifCond}}
+			</label>
+			<select id="idTipoDoc{{nroIntegrante}}" class="span12 tipoDoc" name="solicitudCotizacion[grupoFamiliar][][tipo_doc]" {{#if titular}}class="grey-background" readonly="readonly"  style="pointer-events:none;" value="{{context.context.prospecto.docTipo}}" {{/if}} {{#if integrante.validado}}disabled{{/if}} >
+				<option value="DU" {{#ifCond integrante.tipo_doc 'DU'}}selected{{/ifCond}}> DU</option>
+				<option value="LC" {{#ifCond integrante.tipo_doc 'LC'}}selected{{/ifCond}}> LC</option>
+				<option value="LE" {{#ifCond integrante.tipo_doc 'LE'}}selected{{/ifCond}}> LE</option>
+				<option value="PA" {{#ifCond integrante.tipo_doc 'PA'}}selected{{/ifCond}}> PA</option>
+				<option value="CI" {{#ifCond integrante.tipo_doc 'CI'}}selected{{/ifCond}}> CI</option>
+			</select>
+		</div>
+
+		<div class="control-group  span2 custom-width">
+			<label class="control-label span12" style="text-align:left;">
+				N° de Documento {{#ifCond context.context.task.name 'Cerrar Venta'}}<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>{{/ifCond}}
+			</label>
+			<input id="idNroDoc{{nroIntegrante}}" class="span12 txtNroDocumento" {{#if titular}} value="{{#if context.context.prospecto.docNum}}{{context.context.prospecto.docNum}}{{else}}{{context.context.prospecto.pasaporte}}{{/if}}" readonly {{else}} value="{{integrante.num_doc}}" {{/if}} name="solicitudCotizacion[grupoFamiliar][][num_doc]" type="text" placeholder="Número de Documento..." {{#if integrante.validado}}readonly{{/if}}/>
 		</div>
 	</div>
+
+	<div class="span12">
+		<div class="control-group span2 custom-width">
+			<label class="control-label span12" style="text-align:left;">
+				Género<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
+			</label>
+			<select id="idSexo{{nroIntegrante}}" class="span12 selectSexo" name="solicitudCotizacion[grupoFamiliar][][sexo]" {{#if integrante.validado}}disabled{{/if}} >
+				<option value="" selected>Seleccione el Género</option> 
+				<option value="M" {{#ifCond integrante.genero 'M'}}selected{{/ifCond}}>Masculino</option>
+				<option value="F" {{#ifCond integrante.genero 'F'}}selected{{/ifCond}}>Femenino</option>
+			</select>
+		</div>
+
+		<div class="span2 custom-width">
+			<label class="control-label span12" style="text-align:left;">
+				Fecha de Nacimiento
+			</label>
+			<input id="idNacimiento{{nroIntegrante}}" type="text" class="inputNacimiento span12 input-small date-picker" value="{{prettifyDate integrante.fecha_nac}}" name="solicitudCotizacion[grupoFamiliar][][fecha_nac]" data-type="date" data-format="DD/MM/YYYY" placeholder="Fecha de Nacimiento" {{#if integrante.validado}}readonly{{/if}}/>
+		</div>
+
+		<div class="control-group span1">
+			<label class="control-label span12" style="text-align:left;">
+				Edad<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
+			</label>
+			<input id="idEdad{{nroIntegrante}}" class="inputEdad span12 input-mask-numbers" value="{{integrante.edad}}" name="solicitudCotizacion[grupoFamiliar][][edad]" type="text" data-type="integer" maxlength="3" placeholder="Edad..." {{#if integrante.validado}}readonly{{/if}}/>
+		</div>
+
+		<div class="control-group span2 custom-width">
+			<label class="control-label span12" style="text-align:left;">
+				Condición del Afiliado<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
+			</label>
+			<select id="idCondicion{{nroIntegrante}}" class="selectCondicion span12" name="solicitudCotizacion[grupoFamiliar][][obraSocial]"
+				{{#unless primerIntegrante}}{{#ifNotCond integrante.tipo_inte 'T'}}{{#ifNotCond integrante.tipo_inte 'E'}}disabled{{/ifNotCond}}{{/ifNotCond}}{{/unless}}>
+				<option value="" selected>Seleccion Condici&oacute;n</option>
+				<option value="-1"
+				{{#ifCondition integrante.cond_afi '<=' 0}}{{#ifCond integrante.tipo_inte 'T'}}selected{{/ifCond}}{{#ifCond integrante.tipo_inte 'E'}}selected{{/ifCond}}{{/ifCondition}}>
+					Directo</option>
+				{{#each context.obrasSociales}}
+				<option value="{{this.codigoSSSalud}}" {{#ifCond ../integrante.cond_afi this.codigoSSSalud}}selected{{/ifCond}}>
+					{{#ifEmpty this.institucion.razonSocial}}{{this.descripcion}}{{else}}{{this.institucion.razonSocial}}{{/ifEmpty}}
+				</option>
+				{{/each}}
+			</select>
+		</div>
+
+		<div class="control-group span2 custom-width" style="margin-bottom:2px !important">
+			<label class="lblRemuneracion control-label span12" style="text-align:left">
+				Remuneraci&oacute;n Bruta
+			</label>
+			<input id="idRemuneracion{{nroIntegrante}}" class="inputRemuneracion span12"
+				name="solicitudCotizacion[grupoFamiliar][][remuneracion]" class="input-mask-numbers span12"
+				maxlength="7" type="number" data-type="integer" placeholder="Remuneraci&oacute;n Bruta..."
+				{{#ifCondition integrante.cond_afi '>' 0}}value="{{integrante.remuneracion}}"{{/ifCondition}}
+				{{#ifCondition integrante.cond_afi '<=' 0}}disabled{{/ifCondition}}
+				{{#unless integrante.cond_afi}}disabled{{/unless}} />
+		</div>
+	
+		<div class="span1" style="margin-bottom:2px !important">
+			<div class="divAddIntegrante span6" style="display:none">
+				<span class="btnAddIntegrante middle tooltip-info" title="Agregar Integrante" style="cursor: pointer;"> <i
+						class="icon-plus-sign-alt green" style="font-size: 30px;padding-top: 24px;"></i> </span>
+			</div>
+			<div class="divDeleteIntegrante span6" style="display:none">
+				<span id="borrarIntegrante" class="btnDeleteIntegrante middle tooltip-info" title="Borrar Integrante" style="cursor: pointer;"> <i
+						class="icon-minus-sign-alt red" style="font-size: 30px;padding-top: 24px;"></i> </span>
+			</div>
+		</div>
+
+		<input id="idIntValidado" {{#if integrante.validado}}value="true"{{else}}value="false"{{/if}} name="solicitudCotizacion[grupoFamiliar][][validado]"  style="display: none"/>
+	</div>
+
 </div>
 
 <script>
@@ -93,4 +146,5 @@
 		}
 		this.value = out;
 	});
+
 </script>

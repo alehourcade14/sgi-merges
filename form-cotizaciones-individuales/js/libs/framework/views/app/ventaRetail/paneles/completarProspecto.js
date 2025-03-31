@@ -16,10 +16,10 @@ define ([
 	'/form-smg-commons/js/libs/objectSerializer.js',
 	'/form-smg-commons/js/libs/util/ajaxScreenLockUtil.js',
 	'/form-smg-commons/js/libs/services/gisService.js',
-	'session',
 ], function ($, _, Backbone, Handlebars, bootstrap, ace, Encoding, SettingsModel, Util,
-			 completarProspectoForm, accionesWizard, taskDetailTemplate, ViewConfiguration,
-			 AsyncProcessor, ObjectSerializer, AjaxScreenLockUtil, GisService, Session){
+			 completarProspectoForm, accionesWizard, taskDetailTemplate,
+			 ViewConfiguration, AsyncProcessor, ObjectSerializer, AjaxScreenLockUtil, GisService
+			 ){
 
 	var panelCompletarProspecto = Backbone.View.extend ({
 		

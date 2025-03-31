@@ -84,7 +84,7 @@ define([
 
         list: function (id) {
             var self = this;
-
+           
             Handlebars.registerHelper('changeDecimalSeparator', function(number) {
                 if(number){
                     var roundedNumber = parseFloat(number).toFixed(2);
@@ -129,7 +129,15 @@ define([
             });
 
             asyncFunctions.push(function (successFunction, context) {
+                self.getTramitesVsiList(successFunction);
+            });
+
+            asyncFunctions.push(function (successFunction, context) {
 				self.parseInfoCotizacionesList(successFunction);
+			});
+
+            asyncFunctions.push(function (successFunction, context) {
+				self.addStateProcesoRelacionado(successFunction);
 			});
 
             asyncFunctions.push(function (successFunction, context) {
@@ -176,6 +184,33 @@ define([
             InboxService.searchAdvanceTask(from, to, process, state, input, onSuccess, onError, onComplete);
         },
 
+        getTramitesVsiList: function (successFunction) {
+            var self = this;
+           
+            var from = '01-01-1900';
+            var to = '01-01-1900';
+            var process = 'Venta Salud Individuos';
+            var state = 'abiertos';
+            var input = '&PRO-' + self.prospecto.pk.idProsp;
+
+            onSuccess = function (data) {
+                self.vsiAbiertosList = data;
+                successFunction();
+            };
+
+            onError = function (xhr, err) {
+                Util.error("Sample of error data:", err);
+                Util.error("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+                self.alertMessage("No se pudieron recuperar las cotizaciones", "warning", "exclamation-sign", "Atenci\u00F3n");
+            };
+
+            onComplete = function () {
+
+            };
+
+            InboxService.searchAdvanceTask(from, to, process, state, input, onSuccess, onError, onComplete);
+        },
+
         parseInfoCotizacionesList: function (successFunction) {
 			var self = this;
 
@@ -187,6 +222,23 @@ define([
                     value.capitas = detalleSplitted[2]? detalleSplitted[2] : null;
                 }
 			});
+
+			successFunction();
+        },
+
+        addStateProcesoRelacionado: function (successFunction) {
+			var self = this;
+
+            for (var i = 0; i < self.vsiAbiertosList.length; i++) {
+                var processId = self.vsiAbiertosList[i].processId;
+                for (var j = 0; j < self.cotizacionesList.length; j++) {
+                    var procesoRelacionadoId = self.cotizacionesList[j].procesoRelacionadoId;
+                    self.cotizacionesList[j].procesoRelacionadoIdAbierto = false;
+                    if (processId === procesoRelacionadoId) {
+                        self.cotizacionesList[j].procesoRelacionadoIdAbierto = true;
+                    }
+                }
+            }
 
 			successFunction();
         },
@@ -435,7 +487,7 @@ define([
 		    });
 		    return prospecto;
         },
-        
+
         buscarObrasSociales: function (successFunction) {
 			var self = this;
             var version = 2;

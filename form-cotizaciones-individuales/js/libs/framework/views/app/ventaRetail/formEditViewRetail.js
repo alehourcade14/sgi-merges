@@ -41,14 +41,17 @@ define ([
 	'libs/framework/views/app/ventaRetail/util/cotizadorUtil',
 	'/form-smg-commons/js/libs/services/terinService.js',
 	'text!libs/framework/templates/app/ventaRetail/paneles/listExAfiliadosTable.html',
+	'text!libs/framework/templates/app/ventaRetail/paneles/listExAfiliadosTableFormulario.html',
+    '/form-smg-commons/js/libs/services/obraSocialService.js',
     'text!libs/framework/templates/app/ventaRetail/paneles/modalLinkToolTemplate.html',
 	'/form-smg-commons/js/libs/services/propertiesService.js',
 	'/form-cotizaciones-individuales/js/libs/framework/views/commons/servicios.js'
-], function ($, _, Backbone, Handlebars, bootstrap, ace, Encoding, SettingsModel, Util, InboxService, FuseService, formEditTemplate, 
-			accionesWizard, taskDetailTemplate, taskDetailIntegrantesTemplate, taskDetailPlanesTemplate, taskNotFoundTemplate, panelMotivosRechazo,
-			panelMotivosNoVenta, ListPlanesTemplate, VentarRetailUtil, ViewConfiguration, AsyncProcessor, ObjectSerializer, AjaxScreenLockUtil, LoginService,
-			PromotorService, CotizacionesService, Session, Moment, OvUtil, ProspectoUtil, AlertMessageView, GisService, addressTemplate,
-			completarProspectoView, completarGrupoFamiliarView, ProspectoService, EmpresasService, CotizadorUtil, TerinService, ListaControlExAfiliados, ModalLinkToolTemplate, PropertiesService, Servicios){
+], function ($, _, Backbone, Handlebars, bootstrap, ace, Encoding, SettingsModel, Util, InboxService,
+			 FuseService, formEditTemplate, accionesWizard, taskDetailTemplate, taskDetailIntegrantesTemplate, taskDetailPlanesTemplate, taskNotFoundTemplate, 
+			 panelMotivosRechazo, panelMotivosNoVenta, ListPlanesTemplate, VentarRetailUtil, ViewConfiguration, AsyncProcessor, ObjectSerializer, AjaxScreenLockUtil,
+			 LoginService, PromotorService, CotizacionesService, Session, Moment, OvUtil, ProspectoUtil, AlertMessageView, GisService, addressTemplate,
+			  completarProspectoView, completarGrupoFamiliarView, ProspectoService, EmpresasService, CotizadorUtil, TerinService, ListaControlExAfiliados,
+			  ListExAfiliadosTableFormulario, ObraSocialService, ModalLinkToolTemplate, PropertiesService, Servicios){
 	
 	var newView = Backbone.View.extend ({
 
@@ -110,13 +113,20 @@ define ([
 			'change		.inputEdad'						: 'cambiarAccionesWizard',
 			'change		.selectCondicion'				: 'cambiarAccionesWizard',
 			'change		.inputRemuneracion'				: 'cambiarAccionesWizard',
+			'change 	.txtNroDocumento' 				: 'cambiarAccionesWizard',
+            'change     .tipoDoc'                       : 'cambiarAccionesWizard',
+			'change 	.txtNombre' 					: 'cambiarAccionesWizard',
+            'change     .txtApellido'                   : 'cambiarAccionesWizard',
 			'click		.btnAddIntegrante'				: 'cambiarAccionesWizard',
+			'blur		.inputNacimiento'				: 'cambiarAccionesWizard',
 			'change		#probExitoVenta'				: 'actualizarForecast',
 			'click 	 	#btnEnviarLink' 				: 'showModalEnviarLink',
 			'click 	 	.closeModalLinkTool' 			: 'closeModalLinkTool',
 			'click 	 	#copiarLink'		 			: 'copiarLinkTool',
 			'click 	 	#btnEnviarWhatsapp'		 		: 'enviarToolPorWhatsapp',
 			'click 	 	#btnEnviarMailTool'		 		: 'enviarToolPorMail',
+			'click		.inputNacimiento'				: 'verificarValidacion',
+
 		},
 
 		cambiarAccionesWizard: function(){
@@ -161,7 +171,6 @@ define ([
 				"class": "btn-small btn-success",
 				"callback": function () {
 					self.reloadFamilyGroup();
-					$('.btn-prev').click();
 				}
 			}]);
 		},
@@ -252,7 +261,6 @@ define ([
 			self.getUserInformation(Session.getLocal("userName"), 
 				function( user ){
 					self.userNombreApe = user.nombre + " " + user.apellido;
-					self.legajo=user.legajo;
 					console.log("Usuario que trabaja la etapa", self.userNombreApe);
 				}, onComplete
 			);
@@ -434,11 +442,14 @@ define ([
 			var self = this;
 			var user = Session.getLocal("userName");
 			var userName = Util.getUserNameComplete(Session.getLocal("userId"));
-			var finalObject = ObjectSerializer.serializeObject(self.getForm());
+			var form =  $("#validation-form-retail");
+			var finalObject = ObjectSerializer.serializeObject(form);
 			var accionSeleccionada =  parseInt($("#actions option:selected").data("status"),10);
 			var observacion = finalObject.observacion;
 			var detalle;
 			var arrayEmails = null;
+			var inteCotizacion = self.buildDetalleIntegrantes();
+			finalObject.inteCotizacion = inteCotizacion;
 
 			if(self.idDeCotizacion > 0 || self.ventaSmmpRetail.cotizacion) {
 				finalObject.idCotizacion = self.idDeCotizacion > 0 ? self.idDeCotizacion: self.ventaSmmpRetail.cotizacion.id;				
@@ -629,6 +640,13 @@ define ([
 			if( self.ventaSmmpRetail && self.ventaSmmpRetail.rolUserIniciaTramite ) {
 				finalObject.rolUserIniciaTramite = self.ventaSmmpRetail.rolUserIniciaTramite;
 			}
+
+			//agrego datos de condExAfiliado
+			if (self.hasExAfiliadosData) {
+				finalObject.condExAfiliado = self.formatCondExAfi(self.processDetail.condExAfiAux);
+			} else {
+				finalObject.condExAfiliado = self.formatCondExAfi(self.processDetail.condExAfi);
+			}
 			
 			self.serializedObject = finalObject;
 			
@@ -716,7 +734,9 @@ define ([
 			
 			var serializedObject = self.buildObject( false );
 			var onSuccess = function() {
-				self.getProcessDetail(function() {self.reRenderDetail(self)});
+				self.getProcessDetail(function() {
+					self.filtrarDetExAfiliados(function() {self.reRenderDetail(self)});
+					});
 				VentarRetailUtil.alertMessage("Datos guardados.", "success", "ok", "Exito");
 			};
 			
@@ -763,6 +783,23 @@ define ([
 						VentarRetailUtil.alertMessage("Cotizaci\u00F3n vencida, volver a cotizar", "warning", "exclamation-sign", "Atenci\u00F3n");
 						return;
 					}
+				}
+				//validamos que al cerrar con venta, los integrantes del grupo familiar tengan el dni cargado
+				if ($("#actions option:selected").val() == "aCerradoConVenta" && !self.validDniGrupoFamiliar()) {
+					VentarRetailUtil.unblockScreen();
+					bootbox.dialog('Debés validar el control de ex afiliados previamente para continuar', [{
+						"label": "Aceptar",
+						"class": "btn-small btn-success",
+						"callback": function () {
+							var action = $("#actions option:selected").val();
+							$('#btnVolver').click();
+							var form = self.getForm(action);
+							if(!form.valid()){
+								self.showValidatorErrors();
+							}
+						}
+					}]);
+					return;
 				}
 				var serializedObject = self.buildObject( true );
 					
@@ -953,6 +990,10 @@ define ([
 
 			asyncFunctions.push(function(successFunction, context) {		
 				self.filtrarDetExAfiliados(successFunction);
+			});
+
+			asyncFunctions.push(function(successFunction, context) {		
+				self.loadObrasSociales(successFunction);
 			});
 
 			asyncFunctions.push(function(successFunction, context) {			
@@ -1189,12 +1230,21 @@ define ([
 			var compiledTemplate = Handlebars.compile(taskDetailTemplate);
 			var compiledIntegTemplate = Handlebars.compile(taskDetailIntegrantesTemplate);
 			var compiledPlanesTemplate = Handlebars.compile(taskDetailPlanesTemplate)
+
+			if (self.processDetail.integrantes){
+				self.titular=self.buildTitular(self.processDetail);
+			}
+			if(self.cotizacion){
+				self.ultimaCotizacion=self.processCoticacion(self.cotizacion);
+			}
+
 			$("#processDetail").empty ();
 			$("#processDetail").css("background", "");
 			$("#processDetail").append (compiledTemplate({context: self}));
 			
 			if(self.processDetail.condExAfi){
 				self.renderListaExAfliados();
+				self.renderListaExAfliadosTabDatoCargado();
 			}
             
             self.initAttachmentControllerDetail(successFunction);
@@ -1205,6 +1255,66 @@ define ([
 			//$("#cotizacionPlanes"+this.processDetail.idEtapa).empty ();
 			//$("#cotizacionPlanes"+this.processDetail.idEtapa).append (compiledPlanesTemplate({cotizaciones: this.cotizaciones, vtaPuraPlan: this.processDetail}));
 			
+		},
+		buildTitular: function(processDetail){
+			var self=this;
+			var titular={};
+			for (var i = 0; i < processDetail.integrantes.length; i++) {
+				var integrante = processDetail.integrantes[i];
+				if(integrante.tipo_inte === "T"){
+					titular=integrante;
+					break;
+				}
+			}
+
+			if (self.obrasSociales && processDetail.integrantes) {
+				processDetail.integrantes.forEach(function(integrante) {
+					if (integrante.cond_afi <= 0 || !integrante.cond_afi) {
+						integrante.cond_description = "DIRECTO";
+					} else {
+						for (var i = 0; i < self.obrasSociales.length; i++) {
+							var obraSocial = self.obrasSociales[i];
+							if (obraSocial.codigoSSSalud === integrante.cond_afi) {
+								integrante.cond_description = obraSocial.descripcion;
+							}
+						}
+					}
+				});
+			}
+
+			return titular
+		},
+
+		processCoticacion:function(cotizacion){
+			var self=this;
+			self.cotizacion.planesSeleccionados = [];
+			self.cotizacion.fecha=self.processDetail.altaFecha;
+			self.cotizacion.tarea=self.processDetail.tarea.descripcion;
+			var planesSelected = self.processDetail.planVenta? self.processDetail.planVenta.split(",") : [];
+			planesSelected.length > 1? planesSelected.pop() : null;
+
+			$.each(cotizacion.planes, function (key, plan) {
+				if (planesSelected.includes(plan.codigo) || planesSelected.includes(plan.PLAN_OS)) {
+					plan.valorTotalString=self.changeDecimalSeparator(plan.valorTotalPlan.toString());
+					self.cotizacion.planesSeleccionados.push(plan);
+				}
+			});
+
+			cotizacion.integrantes.forEach(function(integrante) {
+				var condicion = integrante.ID_CONDICION || integrante.obraSocial;
+				if (!condicion) {
+					integrante.cond_description = "DIRECTO";
+				} else {
+					for (var i = 0; i < self.obrasSociales.length; i++) {
+						var obraSocial = self.obrasSociales[i];
+						if (obraSocial.codigoSSSalud === condicion)  {
+							integrante.cond_description = obraSocial.descripcion;
+						}
+					}
+				}
+			});
+
+			return cotizacion;
 		},
 
 		armarCotizacion: function(){
@@ -1260,10 +1370,15 @@ define ([
 			return this;
 		},
 		
-		getForm: function () {
+		getForm: function (accion) {
 			var self = this;
 			var form =  $("#validation-form-retail");
+			form.removeData("validator");
 			self.validate.rules = self.viewConfig.rules;
+			if(accion && accion == "aCerradoConVenta"){
+				self.validate.rules["solicitudCotizacion[grupoFamiliar][][num_doc]"] = {required : true};
+				self.validate.rules["solicitudCotizacion[grupoFamiliar][][sexo]"] = {required : true};
+			}
             self.validate.messages = self.viewConfig.messages;
 			form.validate(self.validate);
 			return form;
@@ -1271,8 +1386,8 @@ define ([
 
 		serializeObject: function () {
 			var self = this;
-
-			return ObjectSerializer.serializeObject(self.getForm());
+			var form =  $("#validation-form-retail");
+			return ObjectSerializer.serializeObject(form);
 		},
 
 		validateForm: function (serializedObject, validate, onSuccess) {
@@ -1281,9 +1396,10 @@ define ([
 			if ( validate ) {
 				var form = self.getForm();
 				if( !form.valid() ){
-	        		self.onValidationFailure();
-	        		return false;
-	            }
+					self.showValidatorErrors();
+					self.onValidationFailure();
+					return false;
+				}
 			}
 			onSuccess(serializedObject);
 			
@@ -1366,7 +1482,7 @@ define ([
 					var valor=  "$ " + self.formatMoney( planCotizacion.valorTotalPlan, 2, ",", "." );
 					var aCargo= "$ " + self.formatMoney( planCotizacion.valorFamiliar, 2, ",", "." );
 					var aporte = "$ "+ self.formatMoney( planCotizacion.valorAporte, 2, ",", "." );
-                    var descMulti = "$ "+ self.formatMoney( planCotizacion.valorDescuento, 2, ",", "." );
+					var descMulti = "$ 0,00";
 					var iva = "$ " + self.formatMoney( planCotizacion.valorIva, 2, ",", "." );
 					var total = "$ "+ self.formatMoney( planCotizacion.valorTotal, 2, ",", "." );
 					
@@ -1523,7 +1639,6 @@ define ([
 			if(!self.panelActivo){
 				self.stepActivo = $('.ace-wizard').find('li.active').attr('data-target');
 			}
-
             if( self.panelActivo == "#step1-entrevistar" && $('#btnCotizar').is(":visible")) {
             	form =  $("#validation-form-retail");
         		
@@ -1789,7 +1904,8 @@ define ([
 			 */
 			var solicitud = {};
 			var self = this;
-			var solicitudCotizacion = ObjectSerializer.serializeObject(self.getForm()).solicitudCotizacion;
+			var form =  $("#validation-form-retail");
+			var solicitudCotizacion = ObjectSerializer.serializeObject(form).solicitudCotizacion;
 
 			solicitud.zona = parseInt($("#slZonas").val(),10);
 			solicitud.grupoFamiliar = solicitudCotizacion.grupoFamiliar;
@@ -1797,6 +1913,7 @@ define ([
 				solicitud.grupoFamiliar[i].inte = i + 1;
 				!solicitud.grupoFamiliar[i].remuneracion ? solicitud.grupoFamiliar[i].remuneracion = 0 : null;
 				solicitud.grupoFamiliar[i].obraSocial = solicitud.grupoFamiliar[i].obraSocial === '-1' ? null : parseInt(solicitud.grupoFamiliar[i].obraSocial, 10)
+				solicitud.grupoFamiliar[i].fecha_nac=solicitud.grupoFamiliar[i].fecha_nac === "" || solicitud.grupoFamiliar[i].fecha_nac === null ? null:solicitud.grupoFamiliar[i].fecha_nac; 
 			}
 
 			return solicitud;
@@ -1849,7 +1966,7 @@ define ([
 			}
 			solicitud.email = (prospecto.emails[0])?prospecto.emails[0].email_tipo_den:null;
 			solicitud.fecha = Moment().format("YYYYMMDD");
-			
+
 			if(!solicitudCotizacion){
                 solicitud.grupoFamiliar = CotizadorUtil.buildObjectGFamiliarSMG();
             }else{
@@ -1860,7 +1977,7 @@ define ([
                     solicitud.grupoFamiliar[i].obraSocial = solicitud.grupoFamiliar[i].obraSocial === '-1' ? null : parseInt(solicitud.grupoFamiliar[i].obraSocial, 10)
                 }
             }
-
+			var cantGrupoFamiliar =  solicitud.grupoFamiliar.length;
 			var user = Session.getLocal("userName");
 			var userId = Session.getLocal("userId");
 			var supervisorAsesor = {};
@@ -1885,7 +2002,7 @@ define ([
 			solicitud.process.variables.processInfo.descripcion = "OV-VA-Individuos";
 			//Para recotizacion
 			var descripcionZona = $("#slZonas option:selected").text().trim() || self.zonas?.find(zona => zona.id === self.processDetail.detalleCotizacion?.zona?.id)?.descripcion || "";
-			solicitud.process.variables.processInfo.detalle = "SGI - " + descripcionZona + " - " + solicitud.grupoFamiliar.length;
+			solicitud.process.variables.processInfo.detalle = "SGI - " + descripcionZona + " - " + cantGrupoFamiliar;
 			solicitud.process.variables.processInfo.credencial = "DOC-" + self.prospecto.docNum;
 			solicitud.process.variables.processInfo.procesoRelacionadoId = self.processId;
 			solicitud.process.variables.processInfo.atencionRelacionadaId = null;
@@ -1902,7 +2019,7 @@ define ([
 			solicitud.process.processId = null;
 			solicitud.process.key = null;
 			solicitud.process.start = new Date().getTime();
-			solicitud.process.detalle = "SGI - " + $("#slZonas option:selected").text() + " - " + solicitud.grupoFamiliar.length;
+			solicitud.process.detalle = "SGI - " + $("#slZonas option:selected").text() + " - " + cantGrupoFamiliar;
 
 			solicitud.canalOrigen = {};
 			solicitud.canalOrigen.id = 2; //CANAL SGI
@@ -1922,7 +2039,8 @@ define ([
 			var userName = Session.getLocal("userName");
 			var userId = Session.getLocal("userId");
 			var prospecto = self.prospecto;
-			var solicitudCotizacion = ObjectSerializer.serializeObject(self.getForm()).solicitudCotizacion;
+			var form =  $("#validation-form-retail");
+			var solicitudCotizacion = ObjectSerializer.serializeObject(form).solicitudCotizacion;
 			var generico = {};
 
 			//solicitado por afilmed para la cotizacion ordenado por sp
@@ -2026,6 +2144,52 @@ define ([
 			//fin parte generica
 
 			return generico;
+		},
+
+		buildDetalleIntegrantes: function(){
+			var self = this;
+
+			var solicitud = {};
+			var form =  $("#validation-form-retail");
+			solicitudCotizacion = ObjectSerializer.serializeObject(form).solicitudCotizacion;
+
+			if(!solicitudCotizacion){
+                solicitud.grupoFamiliar = CotizadorUtil.buildObjectGFamiliarSMG();
+            }else{
+                solicitud.grupoFamiliar = solicitudCotizacion.grupoFamiliar;
+                for (var i = 0; i < solicitud.grupoFamiliar.length; i++) {
+                    solicitud.grupoFamiliar[i].inte = i + 1;
+                    !solicitud.grupoFamiliar[i].remuneracion ? solicitud.grupoFamiliar[i].remuneracion = 0 : null;
+                    solicitud.grupoFamiliar[i].obraSocial = solicitud.grupoFamiliar[i].obraSocial === '-1' ? null : parseInt(solicitud.grupoFamiliar[i].obraSocial, 10)
+                }
+            }
+
+			var inteCotizacion = [];
+			
+			for (var i = 0; i < solicitud.grupoFamiliar.length; i++) {
+				var integrante = solicitud.grupoFamiliar[i];
+	
+				if (integrante.tipo_doc !== 'DU') {
+					integrante.validado = Boolean(integrante.nombre && integrante.apellido && integrante.num_doc && integrante.sexo && integrante.fecha_nac);
+				}
+
+				var transformedIntegrante = {
+					tipo_inte: integrante.parentesco || '',
+					nombre: integrante.nombre || null,
+					apellido: integrante.apellido || null,
+					tipo_doc: integrante.tipo_doc || null,
+					num_doc: integrante.num_doc || null,
+					genero: integrante.sexo || null,
+					fecha_nac: integrante.fecha_nac || null,
+					cond_afi: integrante.obraSocial || -1,
+					edad: integrante.edad || null,
+					remuneracion: integrante.remuneracion ? parseFloat(integrante.remuneracion) : 0,
+					validado: integrante.validado === true || integrante.validado === "true"
+				};
+				inteCotizacion.push(transformedIntegrante);
+			}
+
+			return inteCotizacion;
 		},
 
 		getMotivosRetail: function(onSucess){
@@ -2185,7 +2349,7 @@ define ([
 		validateTelefonos: function(){
 			var self = this;
 			var valid = false;
-			var formPMT = self.getForm();
+			var formPMT =  $("#validation-form-retail");
 			var telefonos = formPMT.serializeObject().prospecto.telefonos;
 			if(telefonos.generico.numero == ""){
 				valid = false;
@@ -2222,8 +2386,7 @@ define ([
 		validateEmails: function(formTarget){
 			var self = this;
 			var emailMsg = "";
-			
-			var formPMT = self.getForm();
+			var formPMT =  $("#validation-form-retail");
 			var emails = formPMT.serializeObject().prospecto.emails;
 			
 			this.$('#errorViewMails').empty ();
@@ -2298,13 +2461,14 @@ define ([
 		},
 
 		showValidatorErrors: function () {
-			
 			var self = this;
-			$.each(self.viewConfig.rules, function (key, value) {
-				$('[name="' + key + '"]').each(function () {
-					$(this).focusout();
+			if(self.viewConfig.rules){
+				$.each(self.viewConfig.rules, function (key, value) {
+					$('[name="' + key + '"]').each(function () {
+						$(this).focusout();
+					});
 				});
-			});
+			}
 		},
 		
 		verificoValidacion: function(){
@@ -2338,7 +2502,8 @@ define ([
 		actualizarProspecto: function(){
 			var self = this;
 			var prospecto = self.prospecto;
-			var prospectoActualizado = ObjectSerializer.serializeObject(self.getForm()).prospecto;
+			var form =  $("#validation-form-retail");
+			var prospectoActualizado = ObjectSerializer.serializeObject(form).prospecto;
 			if(prospectoActualizado){
 				prospecto.nombre = prospectoActualizado.nombre
 				prospecto.apellido = prospectoActualizado.apellido
@@ -2384,7 +2549,7 @@ define ([
 		convertForecastToMoney: function(successFunction){
 			var self = this;
 			$.each(self.processesDetail, function(index, processDetail) {
-				if(processDetail.forecast){
+				if(processDetail.forecast && processDetail.forecast.ponderado){
 					var ponderado = (processDetail.forecast.ponderado).toFixed(2);
 					var sinPonderar = (processDetail.forecast.sinPonderar).toFixed(2);
 					processDetail.forecast.ponderado = self.changeDecimalSeparator(ponderado);
@@ -2523,7 +2688,8 @@ define ([
 						if(context.detalleCotizacion){
 							self.processDetail.detalleCotizacion = context.detalleCotizacion
 							self.cotizacion = self.processDetail.detalleCotizacion;
-							self.integrantes = self.processDetail.detalleCotizacion.integrantes;}
+							self.integrantes = self.processDetail.detalleCotizacion.integrantes;
+						}
 						successFunction();
 					});
 
@@ -2721,17 +2887,25 @@ define ([
 
 			return valido;
 		},
+
+		renderListaExAfliadosTabDatoCargado: function () {
+			var self = this;
+
+			var target = this.$el.find('#listExAfiliadosTableContainer');
+			var compiledTemplate = Handlebars.compile(ListaControlExAfiliados);
+			
+			target.empty();
+			target.append(compiledTemplate({ context: self, hasExAfiliadosData: self.hasExAfiliadosData}));
+		},
 	
 		renderListaExAfliados: function () {
 			var self = this;
 
-			var target = this.$el.find('#listExAfiliadosTableContainer');
+			var target = this.$el.find('#listExAfiliadoContainer');
+			var compiledTemplate = Handlebars.compile(ListExAfiliadosTableFormulario);
 
-			
-			var compiledTemplate = Handlebars.compile(ListaControlExAfiliados);
 			target.empty();
-
-			target.append(compiledTemplate({ context: self }));
+			target.append(compiledTemplate({ context: self, hasExAfiliadosData: self.hasExAfiliadosData }));
 		},
 
 		controlAfiliadosCheck: function (successFunction) {
@@ -2749,29 +2923,26 @@ define ([
 				return false;
 			}
 		},
+
 		filtrarDetExAfiliados: function (successFunction) {
 			var self = this;
-			if (self.detalle && self.detalle.condExAfi) {
+      
+			if (self.processDetail && self.processDetail.condExAfi) {
+      
 				var deudasPorDni = {};
 				var isBloqueante=false;
-				for (var i = 0; i < self.detalle.condExAfi.length; i++) {
-					var objeto = self.detalle.condExAfi[i];
+				for (var i = 0; i < self.processDetail.condExAfi.length; i++) {
+					var objeto = self.processDetail.condExAfi[i];
 					if (!deudasPorDni[objeto.nro_doc]) {
 						deudasPorDni[objeto.nro_doc] = 0;
 					}
 					deudasPorDni[objeto.nro_doc] += objeto.monto_notificado;
 				}
 
-				for (var i = 0; i < self.detalle.condExAfi.length; i++) {
-					var objeto = self.detalle.condExAfi[i];
-					if (objeto && objeto.alta_fecha && objeto.monto_vig_config !== undefined && objeto.monto_notificado !== undefined) {
-						var fechaOriginal = new Date(objeto.alta_fecha);
-						var anioNuevo = fechaOriginal.getFullYear();
-						var mesNuevo = ('0' + (fechaOriginal.getMonth() + 1)).slice(-2);
-						var diaNuevo = ('0' + fechaOriginal.getDate()).slice(-2);
-
-						var fechaNueva = anioNuevo + '-' + mesNuevo + '-' + diaNuevo;
-
+				for (var i = 0; i < self.processDetail.condExAfi.length; i++) {
+					var objeto = self.processDetail.condExAfi[i];
+					
+					if (objeto && objeto.monto_vig_config !== undefined && objeto.monto_notificado !== undefined) {
 						var deudaTotalDni = deudasPorDni[objeto.nro_doc];
 
 						if (objeto.monto_vig_config > objeto.monto_notificado && objeto.monto_vig_config > deudaTotalDni) {
@@ -2785,29 +2956,55 @@ define ([
 							isBloqueante = true;
 						}
 
-						if (objeto.monto_notificado != 0) {
-							objeto.monto_notificado = self.changeDecimalSeparator(objeto.monto_notificado.toString());
-						}
-						objeto.monto_vig_config = self.changeDecimalSeparator(objeto.monto_vig_config.toString());
+						objeto.monto_notificado_format = objeto.monto_notificado != 0 ? self.changeDecimalSeparator(objeto.monto_notificado.toString()) : '0';
+                        
 					}
+					
 					var fechaActual = new Date();
 
 					if (objeto.baja_fecha > fechaActual) {
 						objeto.baja_futura = true;
 					}
 
+					if (objeto.situ_terapeuticas && objeto.situ_terapeuticas.length > 0) {
+						self.procesarSituacionesTerapeuticas(objeto.situ_terapeuticas);
+					}
+
+					self.convertDatesToTimestamps(objeto, ['ingre_fecha', 'baja_fecha']);
+
 					objeto.isBloqueante = self.validBloqueante(objeto);
+					
+					if (objeto.isBloqueante || objeto.bloqueante) {
+						isBloqueante = true;
+            
+					}
+          
 				}
 
-				for (var i = self.detalle.condExAfi.length - 1; i >= 0; i--) {
-					var objeto = self.detalle.condExAfi[i];
+				var allNonBlockingNoDebt = !isBloqueante && Object.values(deudasPorDni).every(function(deuda) { return deuda === 0; });
+
+				// Si hay datos de ex afiliados pero todos son no bloqueantes y sin deuda
+				self.hasExAfiliadosData = (self.processDetail.condExAfi && self.processDetail.condExAfi.length > 0 && allNonBlockingNoDebt);
+
+				for (var i = self.processDetail.condExAfi.length - 1; i >= 0; i--) {
+					var objeto = self.processDetail.condExAfi[i];
 					if (!objeto.isBloqueante && !objeto.bloqueante && !isBloqueante && objeto.monto_notificado === 0) {
-						self.detalle.condExAfi.splice(i, 1);
+						if (!self.hasExAfiliadosData) {
+							self.processDetail.condExAfi.splice(i, 1);
+						} else {
+							self.processDetail.condExAfiAux = self.processDetail.condExAfiAux || [];
+							self.processDetail.condExAfiAux.push(self.processDetail.condExAfi[i]);
+							self.processDetail.condExAfi.splice(i, 1); 
+						}
 					}
 				}
+			} else {
+				self.hasExAfiliadosData = false;
 			}
 			
-			successFunction();
+			if(successFunction){
+				successFunction();
+			}
 
 		},
 		
@@ -2832,6 +3029,86 @@ define ([
 			return false;
 		},
 
+		formatCondExAfi:function(condExAfi){
+			var self=this;
+
+			if(condExAfi && condExAfi.length > 0){
+				for (var i = 0; i < condExAfi.length; i++) {
+					var cond = condExAfi[i];
+					if(cond.situ_terapeuticas && cond.situ_terapeuticas.length > 0){
+						for (var j = 0; j < cond.situ_terapeuticas.length; j++) {
+							var st = cond.situ_terapeuticas[j];
+							if(st.sh_fecha_desde){
+								st.sh_fecha_desde=self.formatDate(st.sh_fecha_desde);
+							}
+							if(st.sh_fecha_hasta){
+								st.sh_fecha_hasta=self.formatDate(st.sh_fecha_hasta);
+							}
+						}
+					}
+				}	
+			}
+
+			return condExAfi;
+		},
+
+		formatDate:function(timestamp) {
+			var date = new Date(timestamp);
+		  
+			var year = date.getUTCFullYear();
+			var month = String(date.getUTCMonth() + 1).padStart(2, '0');
+			var day = String(date.getUTCDate()).padStart(2, '0');
+			var hours = String(date.getUTCHours()).padStart(2, '0');
+			var minutes = String(date.getUTCMinutes()).padStart(2, '0');
+			var seconds = String(date.getUTCSeconds()).padStart(2, '0');
+			var milliseconds = String(date.getUTCMilliseconds()).padStart(3, '0');
+		  
+			var formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}+0000`;
+		  
+			return formattedDate;
+		},
+		
+		convertDatesToTimestamps: function(objeto, dateProperties) {
+			var self = this;
+			for (var i = 0; i < dateProperties.length; i++) {
+				var prop = dateProperties[i];
+				if (objeto[prop] && self.isIsoDateString(objeto[prop])) {
+					objeto[prop] = Date.parse(objeto[prop]);
+				}
+			}
+		},
+		
+		isIsoDateString: function(dateString) {
+			var isoDateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{4}$/;
+			return isoDateFormat.test(dateString);
+		},
+
+		validDniGrupoFamiliar:function(){
+			var self=this;
+			var form =  $("#validation-form-retail");
+			var solicitudCotizacion = ObjectSerializer.serializeObject(form).solicitudCotizacion;
+			var valid=true;
+			for (var i = 0; i < solicitudCotizacion.grupoFamiliar.length; i++) {
+				if(solicitudCotizacion.grupoFamiliar[i].num_doc === ""){
+					valid=false;
+				}
+			}
+
+			return valid;
+		},
+
+		loadObrasSociales: function (successFunction) {
+			var self = this;
+            var version = 2;
+			CotizadorUtil.loadObrasSociales(version, function (obrasSociales) {
+				self.obrasSociales = obrasSociales;  
+		
+				if (successFunction) {
+					successFunction();
+				}
+			});
+		},
+		
 		showModalEnviarLink: function () {
 			var self = this;
 
@@ -2840,7 +3117,7 @@ define ([
 				false,
 				function(data) {
 					var url = data.value;
-					var link = self.generarLink(url);
+					var link = url + self.processDetail.vendedor + "/" + self.processDetail.vendedorCodigo + "/" + self.processId;
 					self.link=link;
 					if(self.link.responseOk){
 						var compiledTemplate = Handlebars.compile(ModalLinkToolTemplate);
@@ -2979,6 +3256,41 @@ define ([
 			);
 		},
 
+		initializeDatepicker: function(inputNac) {
+			if (!inputNac.prop('readonly') && !inputNac.data('datepicker-initialized')) {
+				inputNac.datepicker({
+					language: 'es',
+					weekStart: 0,
+					format: "dd/mm/yyyy",
+					orientation: 'top top',
+					autoHide: true,
+				}).on('changeDate', function() {
+					$(this).datepicker('hide');
+				});
+				inputNac.data('datepicker-initialized', true);
+			}
+		},
+		
+		destroyDatepicker: function(inputNac) {
+			if (inputNac.data('datepicker')) {
+				inputNac.datepicker('hide'); 
+				inputNac.data('datepicker-initialized', false);
+			}
+		},
+		
+		verificarValidacion: function(event) {
+			var self = this;
+			var inputNac = $(event.target).closest('.inputNacimiento');
+			if (inputNac.prop('readonly')) {
+				event.preventDefault();
+				self.destroyDatepicker(inputNac); 
+				return false;
+			} else {
+				self.initializeDatepicker(inputNac); 
+				inputNac.focus(); 
+			}
+		},
+
 		loadZonas: function (successFunction) {
             var self = this;
             ProspectoService.findZonas(0, true,
@@ -2993,6 +3305,26 @@ define ([
 
                 });
         },
+
+		procesarSituacionesTerapeuticas: function(situacionesTerapeuticas) {
+			var self = this;
+			
+			for (var v = 0; v < situacionesTerapeuticas.length; v++) {
+				var situacion = situacionesTerapeuticas[v];
+		
+				if (situacion.st_situ && situacion.st_situ.length === 1) {
+					[situacion.st_situ, situacion.st_deno] = [situacion.st_deno, situacion.st_situ];
+				}
+				
+				self.convertDatesToTimestamps(situacion, ['sh_fecha_desde', 'sh_fecha_hasta']);
+				
+				if (Object.keys(situacion).length === 2 && 
+					situacion.hasOwnProperty('stc_tipo_men') && 
+					situacion.hasOwnProperty('stc_tipo_men_deno')) {
+					situacionesTerapeuticas.splice(v, 1);
+				}
+			}
+		}
 	});
 
 	return newView;

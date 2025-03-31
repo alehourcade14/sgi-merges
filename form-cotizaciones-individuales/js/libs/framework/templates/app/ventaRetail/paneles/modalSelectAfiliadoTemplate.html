@@ -1,0 +1,72 @@
+<div id="modal-form-select-afiliado" class="modal miModal hide" tabindex="-1" style="width: 70%;margin-left: -35%;margin-top: 4%;">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget-box" style="border-bottom: none;">
+                <div id="header-alert" class="widget-header widget-header-blue widget-header-flat"
+                    style="border-top: none;">
+                    <h4 id="addressValidationTitle" class="lighter green">Se encontraron los siguiente resultados</h4>
+                    <span class="widget-toolbar">
+                        <a class="closeModalSelectAfiliado"><i class="icon-remove"></i></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body overflow-visible">
+        <div class="row-fluid">
+            <div class="span12 form-horizontal">
+                <table id='listAfiliados' class="table table-striped table-bordered table-hover" style="margin: 0px">
+                    <thead>
+                        <tr>
+                            <th>N° Documento</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Genero</th>
+                            <th>Fecha de Nacimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each datosMerlin}}
+                        <tr id="registroMerlin">
+                            <td data-ape="{{this.apellido}}" data-nombre="{{this.nombre}}" data-docu="{{this.numeroDocumento}}">
+                                <a class="selectAfiliado enter tooltip-info"  data-rel="tooltip"
+                                    data-placement="top" style="cursor: pointer;" tabindex="0">{{this.numeroDocumento}}</a>
+                            </td>
+                            <td>{{this.nombre}}</td>
+                            <td>{{this.apellido}}</td>
+                            <td>{{this.sexo}}</td>
+                            <td>{{this.fechaNacimiento}}</td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan='5'>No se encontraron resultados</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-small closeModalSelectAfiliado">
+            <i class="icon-remove"></i>
+            No validar
+        </button>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $('[data-rel=tooltip]').tooltip();
+    });
+
+    $(".enter").keydown(function (e) {
+        if (e.keyCode == 13) {
+            e.stopPropagation();
+            e.preventDefault();
+            $(this).click();
+        }
+    });
+</script>

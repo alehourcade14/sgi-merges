@@ -94,6 +94,12 @@ define ([
 					'solicitudCotizacion[grupoFamiliar][][edad]':{
 						required: true
 					},
+					'solicitudCotizacion[grupoFamiliar][][tipo_doc]':{
+						required: false
+					},
+					'solicitudCotizacion[grupoFamiliar][][num_doc]':{
+						required: false
+					},	
 					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
 						required: true
 					},
@@ -104,7 +110,7 @@ define ([
 						required: true
 					},
 					'contacto':{
-						required: true
+						required: false
 					}
 	    		},
 	    		messages: {
@@ -162,6 +168,12 @@ define ([
 					'solicitudCotizacion[grupoFamiliar][][edad]':{
 						required: "Ingrese la Edad."
 					},
+					'solicitudCotizacion[grupoFamiliar][][tipo_doc]':{
+						required: "Ingrese la Fecha de Nacimiento."
+					},	
+					'solicitudCotizacion[grupoFamiliar][][num_doc]':{
+						required: "Ingrese el Número de Documento"
+					},
 					'solicitudCotizacion[grupoFamiliar][][sexo]':{
 						required: "Ingrese el Sexo."
 					},
@@ -198,6 +210,12 @@ define ([
 					'solicitudCotizacion[grupoFamiliar][][edad]':{
 						required: true
 					},
+					'solicitudCotizacion[grupoFamiliar][][tipo_doc]':{
+						required: false
+					},
+					'solicitudCotizacion[grupoFamiliar][][num_doc]':{
+						required: false
+					},
 					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
 						required: true
 					},
@@ -224,6 +242,12 @@ define ([
 					},
 					'solicitudCotizacion[grupoFamiliar][][edad]':{
 						required: "Ingrese la Edad."
+					},
+					'solicitudCotizacion[grupoFamiliar][][tipo_doc]':{
+						required: "Ingrese la Fecha de Nacimiento."
+					},
+					'solicitudCotizacion[grupoFamiliar][][num_doc]':{
+						required: "Ingrese el Número de Documento"
 					},
 					'solicitudCotizacion[grupoFamiliar][][sexo]':{
 						required: "Ingrese el Sexo."
@@ -258,6 +282,12 @@ define ([
 					'solicitudCotizacion[grupoFamiliar][][edad]':{
 						required: true
 					},
+					'solicitudCotizacion[grupoFamiliar][][tipo_doc]':{
+						required: true
+					},
+					'solicitudCotizacion[grupoFamiliar][][num_doc]':{
+						required: true
+					},
 					'solicitudCotizacion[grupoFamiliar][][obraSocial]':{
 						required: true
 					},
@@ -277,6 +307,12 @@ define ([
 					},
 					'solicitudCotizacion[grupoFamiliar][][edad]':{
 						required: "Ingrese la Edad."
+					},
+					'solicitudCotizacion[grupoFamiliar][][tipo_doc]':{
+						required: "Ingrese la Fecha de Nacimiento."
+					},
+					'solicitudCotizacion[grupoFamiliar][][num_doc]':{
+						required: "Ingrese el Número de Documento"
 					},
 					'solicitudCotizacion[grupoFamiliar][][sexo]':{
 						required: "Ingrese el Sexo."

@@ -4,13 +4,11 @@ define([
 	'backbone',
 	'handlebars',
 	'bootstrap',
-	'ace',
-	'/static/js/libs/thirds/jquery/moment.js',
 	'text!libs/framework/templates/app/ventaRetail/paneles/panelEntrevistar.html',  
 	'/form-smg-commons/js/libs/asyncProcessor.js',
 	'/form-smg-commons/js/libs/objectSerializer.js',
 	'/form-smg-commons/js/libs/util/ajaxScreenLockUtil.js'
-], function ($, _, Backbone, Handlebars, bootstrap, ace, moment, entrevistarWizardTemplate, AsyncProcessor, ObjectSerializer, AjaxScreenLockUtil) {
+], function ($, _, Backbone, Handlebars, bootstrap,	entrevistarWizardTemplate, AsyncProcessor, ObjectSerializer, AjaxScreenLockUtil) {
 
 		var panelEntrevistar = Backbone.View.extend({
 
