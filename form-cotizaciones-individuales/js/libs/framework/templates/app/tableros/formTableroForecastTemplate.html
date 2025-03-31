@@ -1,0 +1,135 @@
+<input id="datosAsesores" type="hidden" value="{{convertJsonToString datosAsesores}}" />
+
+<div class="widget-header widget-header-blue widget-header-flat">
+    <h4 class="grey">
+        TABLERO FORECAST
+    </h4>
+    <div id="toolbarLogin" class="widget-toolbar" style="width: 20%;">
+    </div>
+</div>
+<div class="widget-body">
+    <div class="widget-main">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li>
+                            <a id="forecastPesosTabDetail " class="" data-toggle="tab" href="#forecastPesosDetail"> <i
+                                    id="iconCustomer" class="grey icon-bar-chart bigger-110"></i> Forecast Pesos </a>
+                        </li>
+                        <li>
+                            <a id="forecastCapitasTabDetail" data-toggle="tab" href="#forecastCapitasDetail"> <i
+                                    id="iconCheck" class="grey icon-bar-chart bigger-110 active"></i>
+                                Forecast de Cápitas </a>
+                        </li>
+                        <li>
+                            <a id="forecastPesosPonderadoTabDetail" data-toggle="tab"
+                                href="#forecastPesosPonderadoDetail"> <i class="grey icon-bar-chart bigger-110"></i>
+                                Forecast Pesos Ponderado </a>
+                        </li>
+                    </ul>
+                    <div id="tabs-container" class="tab-content">
+                        <div id="forecastPesosDetail" class="tab-pane active in print">
+                            <div style="width: 43%">
+                                <table id="tableForecastPesos" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Asesor</th>
+                                            <th>Forecast Pesos</th>
+                                            <th style="text-align: -webkit-center;">Cantidad de Trámites</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each datosAsesores}}
+                                        <tr>
+                                            <td>{{this.asesor}}</td>
+                                            <td>{{ numberFormat this.forecastPesos "$0,00.00"}}</td>
+                                            <td style="text-align: -webkit-center;">{{ this.totalTramitesAbiertos }}</td>
+                                        </tr>
+                                        {{/each}}
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            </br>
+                            <div id="forecastPesosChartContainer" style="width: 50.28%;" data-title="Forecast Pesos"
+                                data-type="pesos"></div>
+                        </div>
+
+                        <div id="forecastCapitasDetail" class="tab-pane in print" style="overflow: auto;width: 100%;
+                                                                        background-attachment:relative;
+                                                                        background-position:center;">
+                            <div style="width: 43%">
+                                <table id="tableForecastPesos" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Asesor</th>
+                                            <th>Forecast de Cápitas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each datosAsesores}}
+                                        <tr>
+                                            <td>{{this.asesor}}</td>
+                                            <td>{{this.capitasAVender}}</td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                            </br>
+                            <div id="forecastCapitasDetailChartContainer" style="width: 40%;" data-title="Cápitas">
+                            </div>
+                        </div>
+
+                        <div id="forecastPesosPonderadoDetail" class="tab-pane in print" style="overflow: auto;width: 100%;
+                                                                        background-attachment:relative;
+                                                                        background-position:center;">
+                            <div style="width: 43%">
+                                <table id="tableForecastPesos" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Asesor</th>
+                                            <th>Forecast Ponderado </th>
+                                            <th style="text-align: -webkit-center;">Cantidad de Trámites</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each datosAsesores}}
+                                        <tr>
+                                            <td>{{this.asesor}}</td>
+                                            <td>{{numberFormat this.forecastPonderado "$0,00.00"}}</td>
+                                            <td style="text-align: -webkit-center;">{{ this.totalTramitesAbiertos }}</td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                            </br>
+                            <div id="forecastPesosPonderadoDetailChartContainer" style="width: 40%;"
+                                data-title="Forecast Ponderado" data-type="pesos"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    td {
+        border: solid 0.5px #e5e5e5;
+    }
+    th {
+        color: #707070;
+        border: solid 0.5px #e5e5e5;
+    }
+    #container {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 0 auto;
+        height: 400px;
+    }
+</style>

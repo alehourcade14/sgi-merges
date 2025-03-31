@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "description": "Obstetra / Ginecólogo"
+    },
+    {
+        "id": 2,
+        "description": "Web"
+    },
+    {
+        "id": 3,
+        "description": "Publicidad / Promoción"
+    },
+    {
+        "id": 4,
+        "description": "Partera/Curso de Preparto"
+    },
+    {
+        "id": 5,
+        "description": "Montes de Oca"
+    },
+    {
+        "id": 6,
+        "description": "Redes Sociales"
+    },
+    {
+        "id": 7,
+        "description": "Referido/Conocido"
+    },
+    {
+        "id": 8,
+        "description": "SMG (situación Terapéutica)"
+    },
+    {
+        "id": 9,
+        "description": "Otros"
+    }
+]

@@ -1,0 +1,10 @@
+[{
+  "rol": "SGI_PAS",
+  "workContext": "AMB_PRODUCTOR"
+}, {
+  "rol": "SGI_BROKER",
+  "workContext": "AMB_BROKER"
+}, {
+  "rol": "SGI_ASESOR_FFVV",
+  "workContext": "AMB_FUERZA_VTA_DIRECTA"
+}]

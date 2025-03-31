@@ -1,0 +1,18 @@
+<link rel="stylesheet" type="text/css" href="/form-cotizaciones-individuales/js/libs/framework/views/helpers/controladorArchivos/archivoStyle.css" />
+<div class="row-fluid" style="margin-bottom:15px;">
+	<div class="span4">
+		<button id="btnClickCargarArchivos{{id}}" type="button" class="btn btn-danger btn-small"  >Seleccionar archivo</button>
+	</div>
+	<div class="span8" style="text-align:right">
+		<button id="btnBorrarSeleccionadas{{id}}" class="btn btn-danger btn-mini" data-container= 'body' type="button" data-rel="tooltip" title="Borrar seleccionadas" data-toggle="dropdown" data-placement="bottom" ><i class="icon-trash icon-2x icon-only"></i></button> 
+	</div>
+	<input id="btnAgregarArchivos{{id}}" type="file" class="upload" multiple style="display:none;"/>
+</div>
+<div class="row-fluid imagenesContainer" id="imagenesContainer{{id}}">
+	<ul id="imagenesGallery{{id}}ParaSubir" class="ace-thumbnails listImagenes"></ul>
+</div>
+<div><small>{{notaAlPie}}</small></div>
+<div id="testDescarga" class="hide"></div>
+<div class="cargando hide" id="{{id}}CargandoDiv">
+    <i class="icon-spinner icon-spin red bigger-300"></i>
+</div>

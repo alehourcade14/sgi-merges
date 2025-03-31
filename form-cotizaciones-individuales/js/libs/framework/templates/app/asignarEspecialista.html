@@ -1,0 +1,119 @@
+
+<input name="motivo[id]"            value="{{id}}" type="hidden">
+<input name="motivo[descripcion]"   value="{{motive}}" type="hidden">
+<input name="motivo[submotivo][descripcion]"   value="" type="hidden">
+<input name="estado[id]"            value="" type="hidden">
+<input name="estado[descripcion]"   value="" type="hidden">
+<input name="user[id]"              value="{{userId}}" type="hidden">
+<input name="user[username]"        value="{{userName}}" type="hidden">
+<input name="user[name]"            value="{{prettifyCN userId}}" type="hidden">
+
+<input name="task[id]"              value="{{tasks.id}}" type="hidden">
+<input name="task[name]"            value="{{tasks.name}}" type="hidden">
+
+<input name="process[variables][workContext]"  value="AMB_COMERCIAL" type="hidden">
+<input name="process[variables][processInfo][id]"  value="0" type="hidden">
+<input name="process[variables][processInfo][name]"  value="{{motive}}" type="hidden">
+<input name="process[variables][processInfo][description]"  value="{{motive}}" type="hidden">
+<input name="process[variables][processInfo][credencial]"  value="" type="hidden">
+<input name="process[variables][processInfo][afiliado]"  value="" type="hidden">
+
+<input name="process[id]"       value="{{tasks.processId}}" type="hidden">
+<input name="process[version]"  value="1" type="hidden">
+<input name="process[processName]"  value="{{tasks.processName}}" type="hidden">
+<input name="process[key]"      value="{{workflowId}}" type="hidden">
+<input name="process[status]"  value="Running" type="hidden">
+<input name="process[workContext]"  value="{{subsidiary}}" type="hidden">
+<input name="process[credencial]"  value="" type="hidden">
+<input name="process[afiliado]"  value="" type="hidden">
+<input name="process[vip]"  value="" type="hidden">
+<input name="process[currentNodeName]"  value="" type="hidden">
+<input name="process[ambitoGestion]"  value="{{subsidiary}}" type="hidden">
+<input name="process[customerName]"  value="" type="hidden">
+
+<input name="reserva[id]" value="{{workflowId}}" type="hidden">
+<input name="reserva[estado][id]" value="{{reserva.estado.id}}" type="hidden">
+<input name="reserva[estado][reservar]" value="{{reserva.estado.reservar}}" type="hidden">
+<input id="hidRolEspecialista" name="reserva[users][0][role]" value="" type="hidden">
+<!-- <input id="hidCodPromotor" name="reserva[users][0][codigoPromotor]" value="" type="hidden"> -->
+<input name="etapa[usuario]" value="{{prettifyCN userId}}" type="hidden">
+
+<div class="row-fluid">
+	<div class="control-group span6">
+		<label class="control-label">C&#243;digo Promotor:</label>
+		<div class="controls">
+			<div class="span12">
+				<input name="reserva[users][0][codigoAsesor]"  
+				maxlength="6" type="text" placeholder="C&#243;digo Promotor..." />
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="control-group span6">
+		<label class="control-label">Asesor: <i
+			class="icon-asterisk red"
+			style="font-size: 10px; vertical-align: 5px;"></i></label>
+		<div class="controls">
+			<div class="input-append">
+				<input id="txtEspecialista" name="reserva[users][0][name]" type="text" data-error-placement="#vendedorError"
+					readonly="readonly" /> <span id="btnSearchEspecialistas" class="add-on" style="cursor: pointer">
+					<i class="icon-search icon-on-right red"></i>
+				</span>
+			</div>
+		</div>
+		<div id="vendedorError" class="controls red" ></div>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="control-group span6">
+		<label class="control-label" for="observacion">Observaci&#243;n:
+		</label>
+
+		<div class="controls">
+			<textarea id="observacion" name="etapa[observacion]" class="span12 limited"
+				data-maxlength="255" maxlength="255" rows="5"></textarea>
+		</div>
+	</div>
+</div>
+
+<hr style="margin-bottom: 10px;"/>
+											
+<div class="row-fluid wizard-actions">
+    
+    <div class="control-group" style="margin: 0px; padding: 0px">
+        <div id="controlActions" class="controls input-append">
+            <select id="actions" name="process[action]" style="width: 200px;" data-error-placement="#processActionError">
+                <option id="" data-status="" data-status-description="" value="">--Seleccione una acci&oacute;n--</option>
+                {{#each tasks.actions}}
+                    <option id="{{this.id}}" data-status="{{this.status.id}}" data-status-description="{{this.status.description}}" value="{{this.action}}">{{this.description}}</option>
+                {{/each}}
+            </select> 
+            <span id="btnSaveAndEndTask" class="add-on btn-danger" style="cursor: pointer">
+                <i class="icon-arrow-right icon-on-right"></i>
+            </span>
+        </div>
+        <div id="processActionError" class="controls red"></div>
+    </div>
+</div>
+<script>
+
+$(function() {
+    
+    $('[data-rel=tooltip]').tooltip();
+
+    $('textarea[class*=autosize]').autosize({append: "\n"});
+    $('textarea[class*=limited]').each(function() {
+        var limit = parseInt($(this).attr('data-maxlength')) || 100;
+        $(this).inputlimiter({
+            "limit": limit,
+            remText: '%n disponible%s...',
+            limitText: 'caracteres maximos : %n.'
+        });
+    });
+    
+    $(".text").css ("width","100%");
+}); 
+
+
+</script>

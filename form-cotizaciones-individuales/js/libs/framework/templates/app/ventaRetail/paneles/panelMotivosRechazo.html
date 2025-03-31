@@ -1,0 +1,6 @@
+<select id="motivosCerradoSinVentaSelect" name="ventaEccoAP[motivoRechazo]" data-type="integer">
+    <option id="" value="">--Seleccione motivo rechazo--</option>
+    {{#each context.motivosRechazo}}
+        <option id="{{this.id}}" value="{{this.id}}">{{this.descripcion}}</option>
+    {{/each}}
+</select>

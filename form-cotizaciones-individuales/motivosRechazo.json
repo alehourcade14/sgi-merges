@@ -1,0 +1,62 @@
+[
+    {
+        "id": "1",
+        "descripcion": "Sin venta por precio"
+    },
+	{
+        "id": "2",
+        "descripcion": "Sin venta por producto"
+    },
+		{
+        "id": "3",
+        "descripcion": "Sin venta imposible contactar"
+    },
+		{
+        "id": "4",
+        "descripcion": "Sin venta por Preexistencia"
+    },
+		{
+        "id": "5",
+        "descripcion": "Sin venta por Cartilla"
+    },
+	{
+        "id": "6",
+        "descripcion": "Sin venta por servicio"
+    },
+	{
+        "id": "7",
+        "descripcion": "PAS no contactado"
+    },
+    {
+        "id": "8",
+        "descripcion": "Es Cliente"
+    },
+    {
+        "id": "9",
+        "descripcion": "Baja Menor a 6 meses"
+    },
+    {
+        "id": "10",
+        "descripcion": "Reservado por Otro Canal"
+    },
+    {
+        "id": "11",
+        "descripcion": "Reservado por Corporativa"
+    },
+    {
+        "id": "12",
+        "descripcion": "No aplica Modalidad de venta"
+    },
+    {
+        "id": "13",
+        "descripcion": "Error en datos de prospecto"
+    },
+    {
+        "id": "14",
+        "descripcion": "Deuda en Veraz"
+    },
+    {
+        "id": "15",
+        "descripcion": "Sin Gestion"
+    }
+]

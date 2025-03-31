@@ -1,0 +1,40 @@
+<div class="span1">
+	<i  class="icon-info-sign" style="text-align:justify;font-size: 18px;margin-top: 8px;" title="Información" data-toggle="popover" data-placement="left" data-content="
+		Sus asesores son:
+		<br>
+		<ul style='list-style-type:disc;'>
+			{{#each asesoresRelacionados}}
+				<li>{{prettifyCN this.uid}}</li>
+			{{/each}}
+		</ul>
+		<p style='text-align:justify'>Los asesores asignados no pueden comercializar en la zona del prospecto.
+		Es por eso que este trámite se derivará a un asesor de la zona</p>">
+	</i>
+</div>
+
+<div class="span11">
+	<!--<label class="control-label" for="asesorVtaAsistida" style="display: inline-block;width: 80%;margin-left: -40%;float: left;text-align: left;display: block;">Asesor</label>		-->                                                                         
+	<label class="control-label" style="text-align: left;width: 100%;">No hay asesor definido para domicilio del prospecto. El dato ingresado se derivará a un asesor de la zona.</label>	
+</div>
+<script type="text/javascript">
+	$(function () {
+		$('[data-toggle=popover]').hover(function (e) {
+			if (!$(".popover").is(':visible')) {
+				var el = this;
+				$(el).popover({
+			html: true,
+			content: function () {
+				return $('#popover-content').html();
+			}
+		}
+				);
+				$(el).popover('show');
+				$(".popover > h3").append('<span class="close icon icon-remove"></span>')
+					.find('.close').on('click', function (e) {
+						e.preventDefault();
+						$(el).popover('hide');
+					});
+			}
+		});
+	});
+</script>

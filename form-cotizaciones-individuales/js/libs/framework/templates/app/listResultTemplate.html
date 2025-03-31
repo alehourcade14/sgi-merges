@@ -1,0 +1,83 @@
+<table id='listGrid' class="table table-striped table-bordered table-hover"  style="overflow-x: hidden; ">
+<thead>
+    <tr>
+        <th class="hidden-480"></th>
+        <th>Nombre y Apellido</th>
+        <th>Legajo</th>
+    </tr>
+</thead>
+<tbody>
+    {{#if supervisores}}
+        {{#each data}}
+            <tr data-uid="{{this.uid}}" data-legajo="{{this.legajo}}" data-login="{{this.login}}"
+                style="cursor:pointer;cursor:hand; "  class="select-search-item">
+                <td style="width: 5px" class="hidden-480">
+                    <small class="tooltip-info" data-rel="tooltip" data-placement="Top" title="" data-original-title="Afiliado">
+                        <i class="icon-user blue" style="font-size: 20px;" ></i>
+                    </small>
+                </td>
+                <td>{{this.nya}}</td>
+                <td>{{this.legajo}}</td>
+            </tr>
+        {{else}}
+            <tr><td colspan='3'>No se encontraron resultados</td></tr>
+        {{/each}}
+    {{else}}
+        {{#each data}}
+            {{#each this.ambitosGestion}}
+                {{#ifCond this.id 'CN=AMB_OV_ASESOR,OU=CRM_PRUEBA,OU=APPLS,DC=SWM,DC=COM,DC=AR'}}
+                    <tr data-uid="{{../../this.uid}}" data-legajo="{{../../this.legajo}}" data-login="{{../../this.login}}"
+                        style="cursor:pointer;cursor:hand; "  class="select-search-item">
+                        <td style="width: 5px" class="hidden-480">
+                            <small class="tooltip-info" data-rel="tooltip" data-placement="Top" title="" data-original-title="Afiliado">
+                                <i class="icon-user blue" style="font-size: 20px;" ></i>
+                            </small>
+                        </td>
+                        <td>{{../../this.nya}}</td>
+                        <td>{{../../this.legajo}}</td>
+                    </tr>
+                {{/ifCond}}
+            {{/each}}
+        {{else}}
+            <tr><td colspan='3'>No se encontraron resultados</td></tr>
+        {{/each}}
+    {{/if}}
+</tbody>
+</table>
+{{#if data }}
+		<script src="../static/js/libs/thirds/jquery/jquery.slimscroll.min.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                var oTable1 = $('#listGrid').dataTable( {
+                //"sScrollY": $(window).height() - 380 + "px",
+                "aaSorting": [[ 1, "asc" ]],
+                "aoColumns": [
+                  { "bSortable": false },null,null
+                ] }
+                 );
+                 
+
+                $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+                function tooltip_placement(context, source) {
+                    var $source = $(source);
+                    var $parent = $source.closest('table')
+                    var off1 = $parent.offset();
+                    var w1 = $parent.width();
+            
+                    var off2 = $source.offset();
+                    var w2 = $source.width();
+            
+                    if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
+                    return 'left';
+                }
+              
+                $('#listGrid > tbody  > tr').each(function() {
+                    $this = $(this);
+                    $this.width($("#listGrid").width());
+                });
+                
+
+            });
+           
+        </script>
+{{/if}}

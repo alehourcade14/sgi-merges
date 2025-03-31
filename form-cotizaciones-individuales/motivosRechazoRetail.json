@@ -1,0 +1,54 @@
+[
+    {
+        "id": "1",
+        "descripcion": "Sin venta por precio"
+    },
+	{
+        "id": "2",
+        "descripcion": "Sin venta por producto"
+    },
+		{
+        "id": "3",
+        "descripcion": "Sin venta imposible contactar"
+    },
+		{
+        "id": "4",
+        "descripcion": "Sin venta por Preexistencia"
+    },
+	{
+        "id": "6",
+        "descripcion": "Sin venta por servicio"
+    },
+    {
+        "id": "15",
+        "descripcion": "Sin Gestion"
+    },
+    {
+        "id": "23",
+        "descripcion": "Sin venta por falta de prestadores"
+    },
+	{
+        "id": "17",
+        "descripcion": "Sin venta por retención de clientes / cambio de Plan / socio Activo"
+    },
+		{
+        "id": "18",
+        "descripcion": "Sin venta por CorRe / Corporativo / Pyme"
+    },
+		{
+        "id": "19",
+        "descripcion": "Sin venta por no desregula – Decreto 2021/438"
+    },
+	{
+        "id": "20",
+        "descripcion": "Sin venta por reasignación a otro asesor"
+    },
+    {
+        "id": "21",
+        "descripcion": "Sin venta por dato con errores / dato incompleto"
+    },
+    {
+        "id": "22",
+        "descripcion": "Sin venta por rango de edad incorrecto"
+    }
+]
