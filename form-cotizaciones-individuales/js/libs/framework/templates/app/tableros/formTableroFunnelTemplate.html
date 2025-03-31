@@ -46,14 +46,24 @@
                                             <td class="span3">{{ datosFunnelVentaPyme.cantTramitesContactarPonderacion}} %</td>
                                         </tr>
                                         <tr>
-                                            <th>Entrevistar</td>
-                                            <td>{{ datosFunnelVentaPyme.empresasEntrevistar }}</td>
-                                            <td>{{ datosFunnelVentaPyme.cantTramitesEntrevistarPonderacion}} %</td>
+                                            <th>Comercializar</td>
+                                            <td>{{ datosFunnelVentaPyme.empresasComercializar }}</td>
+                                            <td>{{ datosFunnelVentaPyme.cantTramitesComercializarPonderacion}} %</td>
                                         </tr>
                                         <tr>
-                                            <th>Cerrar Venta</td>
-                                            <td>{{ datosFunnelVentaPyme.empresasEntregarInfo }}</td>
-                                            <td>{{ datosFunnelVentaPyme.cantTramitesCerrarVentaPonderacion}} %</td>
+                                            <th>Gestionar Alta</td>
+                                            <td>{{ datosFunnelVentaPyme.empresasGestionarAlta }}</td>
+                                            <td>{{ datosFunnelVentaPyme.cantTramitesGestionarAltaPonderacion}} %</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Analizar Ingreso DDJJ</td>
+                                            <td>{{ datosFunnelVentaPyme.empresasAnalizarDDJJ }}</td>
+                                            <td>{{ datosFunnelVentaPyme.cantTramitesAnalizarDDJJPonderacion}} %</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Solicitar Documentacion Medica</td>
+                                            <td>{{ datosFunnelVentaPyme.empresasSolicitarDocMedica }}</td>
+                                            <td>{{ datosFunnelVentaPyme.cantTramitesSolicitarDocMedicaPonderacion}} %</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -81,14 +91,24 @@
                                                 <td class="span3">{{ datosFunnelVentaPyme.forecastSinPonderarContactarPonderacion }} %</td>
                                             </tr>
                                             <tr>
-                                                <th>Entrevistar</td>
-                                                <td>{{ numberFormat datosFunnelVentaPyme.forecastSinPonderarEntrevistar "$0,00.00"}}</td>
-                                                <td>{{ datosFunnelVentaPyme.forecastSinPonderarEntrevistarPonderacion }} %</td>
+                                                <th>Comercializar</td>
+                                                <td>{{ numberFormat datosFunnelVentaPyme.forecastSinPonderarComercializar "$0,00.00"}}</td>
+                                                <td>{{ datosFunnelVentaPyme.forecastSinPonderarComercializarPonderacion }} %</td>
                                             </tr>
                                             <tr>
-                                                <th>Cerrar Venta</td>
-                                                <td>{{ numberFormat datosFunnelVentaPyme.forecastSinPonderarEntregarInfo "$0,00.00"}}</td>
-                                                <td>{{ datosFunnelVentaPyme.forecastSinPonderarCerrarVentaPonderacion  }} %</td>
+                                                <th>Gestionar Alta</td>
+                                                <td>{{ numberFormat datosFunnelVentaPyme.forecastSinPonderarGestionarAlta "$0,00.00"}}</td>
+                                                <td>{{ datosFunnelVentaPyme.forecastSinPonderarGestionarAltaPonderacion }} %</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Analizar Ingreso DDJJ</td>
+                                                <td>{{ numberFormat datosFunnelVentaPyme.forecastSinPonderarAnalizarDDJJ "$0,00.00"}}</td>
+                                                <td>{{ datosFunnelVentaPyme.forecastSinPonderarAnalizarDDJJPonderacion }} %</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Solicitar Documentacion Medica</td>
+                                                <td>{{ numberFormat datosFunnelVentaPyme.forecastSinPonderarSolicitarDocMedica "$0,00.00"}}</td>
+                                                <td>{{ datosFunnelVentaPyme.forecastSinPonderarSolicitarDocMedicaPonderacion }} %</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -116,14 +136,24 @@
                                                 <td class="span3">{{ datosFunnelVentaPyme.capitasContactarPonderacion }} %</td>
                                             </tr>
                                             <tr>
-                                                <th>Entrevistar</td>
-                                                <td>{{ datosFunnelVentaPyme.capitasEntrevistar }}</td>
-                                                <td>{{ datosFunnelVentaPyme.capitasEntrevistarPonderacion }} %</td>
+                                                <th>Comercializar</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasComercializar }}</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasComercializarPonderacion }} %</td>
                                             </tr>
                                             <tr>
-                                                <th>Cerrar Venta</td>
-                                                <td>{{ datosFunnelVentaPyme.capitasEntregarInfo }}</td>
-                                                <td>{{ datosFunnelVentaPyme.capitasCerrarVentaPonderacion }} %</td>
+                                                <th>Gestionar Alta</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasGestionarAlta }}</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasGestionarAltaPonderacion }} %</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Analizar Ingreso DDJJ</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasAnalizarDDJJ }}</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasAnalizarDDJJPonderacion }} %</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Solicitar Documentacion Medica</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasSolicitarDocMedica }}</td>
+                                                <td>{{ datosFunnelVentaPyme.capitasSolicitarDocMedicaPonderacion }} %</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -180,27 +210,35 @@ $(function () {
         return [padding, centralPiece, padding]
     };
 
-    var  datosFunnel = JSON.parse($('#datosFunnelVentaPyme').val());
-    var  forecastSinPonderarCotizar = parseFloat(datosFunnel.forecastSinPonderarCotizar.toFixed(2));
-    var  forecastSinPonderarEntrevistar = parseFloat(datosFunnel.forecastSinPonderarEntrevistar.toFixed(2));
-    var  forecastSinPonderarEntregarInfo = parseFloat(datosFunnel.forecastSinPonderarEntregarInfo.toFixed(2));
+    var datosFunnel = JSON.parse($('#datosFunnelVentaPyme').val());
+    var forecastSinPonderarCotizar = parseFloat(datosFunnel.forecastSinPonderarCotizar.toFixed(2));
+    var forecastSinPonderarComercializar = parseFloat(datosFunnel.forecastSinPonderarComercializar.toFixed(2));
+    var forecastSinPonderarGestionarAlta = parseFloat(datosFunnel.forecastSinPonderarGestionarAlta.toFixed(2));
+    var forecastSinPonderarAnalizarDDJJ = parseFloat(datosFunnel.forecastSinPonderarAnalizarDDJJ.toFixed(2));
+    var forecastSinPonderarSolicitarDocMedica = parseFloat(datosFunnel.forecastSinPonderarSolicitarDocMedica.toFixed(2));
 
      datosEmpresas = [
-        {"name": "Contactar" , "value" :  datosFunnel.empresasCotizar},
-        {"name": "Entrevistar" , "value" :  datosFunnel.empresasEntrevistar},
-        {"name": "Cerrar Venta" , "value" :  datosFunnel.empresasEntregarInfo},
+        {"name": "Contactar" , "value" : datosFunnel.empresasCotizar},
+        {"name": "Comercializar" , "value" : datosFunnel.empresasComercializar},
+        {"name": "Gestionar Alta" , "value" : datosFunnel.empresasGestionarAlta},
+        {"name": "Analizar Ingreso DDJJ" , "value" : datosFunnel.empresasAnalizarDDJJ},
+        {"name": "Solicitar Documentacion Medica" , "value" : datosFunnel.empresasSolicitarDocMedica}
     ];
 
      datosForecastSinPonderar = [
-        {"name": "Contactar" , "value" :  forecastSinPonderarCotizar},
-        {"name": "Entrevistar" , "value" :  forecastSinPonderarEntrevistar},
-        {"name": "Cerrar Venta" , "value" : forecastSinPonderarEntregarInfo},
+        {"name": "Contactar" , "value" : forecastSinPonderarCotizar},
+        {"name": "Comercializar" , "value" : forecastSinPonderarComercializar},
+        {"name": "Gestionar Alta" , "value" : forecastSinPonderarGestionarAlta},
+        {"name": "Analizar Ingreso DDJJ" , "value" : forecastSinPonderarAnalizarDDJJ},
+        {"name": "Solicitar Documentacion Medica" , "value" : forecastSinPonderarSolicitarDocMedica}
     ];
 
      datosCapitas = [
-        {"name": "Contactar" , "value" :  datosFunnel.capitasCotizar},
-        {"name": "Entrevistar" , "value" :  datosFunnel.capitasEntrevistar},
-        {"name": "Cerrar Venta" , "value" :  datosFunnel.capitasEntregarInfo},
+        {"name": "Contactar" , "value" : datosFunnel.capitasCotizar},
+        {"name": "Comercializar" , "value" : datosFunnel.capitasComercializar},
+        {"name": "Gestionar Alta" , "value" : datosFunnel.capitasGestionarAlta},
+        {"name": "Analizar Ingreso DDJJ" , "value" : datosFunnel.capitasAnalizarDDJJ},
+        {"name": "Solicitar Documentacion Medica" , "value" : datosFunnel.capitasSolicitarDocMedica}
     ];
 
     var chart;
@@ -216,7 +254,7 @@ $(function () {
                 text: 'TRAMITES'
             },
             xAxis: {
-                categories: ['Contactar', 'Entrevistar', 'Cerrar Venta'],
+                categories: ['Contactar', 'Comercializar', 'Gestionar Alta', 'Analizar Ingreso DDJJ', 'Solicitar Documentacion Medica'],
                 gridLineWidth: 0,
                 minorGridLineWidth: 0
             },
@@ -274,7 +312,7 @@ $(function () {
                 text: 'PESOS'
             },
             xAxis: {
-                categories: ['Contactar', 'Entrevistar', 'Cerrar Venta'],
+                categories: ['Contactar', 'Comercializar', 'Gestionar Alta', 'Analizar Ingreso DDJJ', 'Solicitar Documentacion Medica'],
                 gridLineWidth: 0,
                 minorGridLineWidth: 0
             },
@@ -337,7 +375,7 @@ $(function () {
                 text: 'CAPITAS'
             },
             xAxis: {
-                categories: ['Contactar', 'Entrevistar', 'Cerrar Venta'],
+                categories: ['Contactar', 'Comercializar', 'Gestionar Alta', 'Analizar Ingreso DDJJ', 'Solicitar Documentacion Medica'],
                 gridLineWidth: 0,
                 minorGridLineWidth: 0
             },
