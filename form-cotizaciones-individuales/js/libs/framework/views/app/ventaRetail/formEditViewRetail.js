@@ -3119,16 +3119,55 @@ define ([
 					var url = data.value;
 					var link = url + self.processDetail.vendedor + "/" + self.processDetail.vendedorCodigo + "/" + self.processId;
 					self.link=link;
-					var compiledTemplate = Handlebars.compile(ModalLinkToolTemplate);
-					$("#modal-link-asesores").html(compiledTemplate({ context: self, link: link }));
-					$("#modal-form-link-tool").modal("show");
-					$(".modal-backdrop").remove();
+					if(self.link.responseOk){
+						var compiledTemplate = Handlebars.compile(ModalLinkToolTemplate);
+						$("#modal-link-asesores").html(compiledTemplate({ context: self, link: link.mensaje }));
+						$("#modal-form-link-tool").modal("show");
+						$(".modal-backdrop").remove();
+					}else{
+						bootbox.dialog("No es posible generar automáticamente el link del Tool de Asesores porque el usuario posee múltiples códigos de promotor asignados en Afilmed. Por favor, consulte a su supervisor para generarlo manualmente.", [{
+							"label" : "OK",
+							"class" : "btn-small",
+							"callback": function() {
+								$('#take-in').hide();
+							}
+							}]
+						);
+					}
+					
 				},
 				function( xhr,err ) {
 					Util.error('Error recuperando property para armar el link: ', err);
 					Util.error("readyState:"+xhr.readyState+"\nstatus:"+xhr.status+"\nresponseText: "+xhr.responseText);
 				}
 			);
+		},
+
+		generarLink(url) {
+			var self = this;
+			var link={
+				responseOk:true,
+				mensaje:""
+			};
+			if(Session.getLocal("userName") === 'sgiasesor'){
+				self.legajo = '28783';
+			}
+			EmpresasService.getInfoAsesorLegajo(self.legajo,false,
+				function (asesor) {
+					Util.debug("asesor", asesor);
+					link.mensaje = url + Session.getLocal("userName") + "/" + asesor.codigoProductor.trim() + "/" + self.processId;
+				},
+				function (xhr, err, urlRest, typeCall) {
+					link.responseOk=false;
+					link.mensaje=url + "nombreUsuario/códigoAsesor/NroTramiteVSI";
+					Util.error('Sample of error data:', err);
+					Util.error("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+				},
+				function (data) {
+				}
+			);
+
+			return link;
 		},
 
 		closeModalLinkTool: function(){
@@ -3188,7 +3227,7 @@ define ([
 					},
 					{
 						name:'custom_url',
-						value:self.link
+						value:self.link.mensaje
 					}
 				]
 			};
