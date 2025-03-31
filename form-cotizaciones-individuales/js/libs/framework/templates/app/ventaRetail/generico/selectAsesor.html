@@ -1,6 +1,0 @@
-<select id="selAsesorId" name="selAsesor" data-type="string" data-serializable="false" {{#ifCond asesoresHabilitados false}}class="grey-background span12" readonly="readonly" {{/ifCond}}  style="width: 117%;">
-	<option value="">{{#ifCond asesoresHabilitados false}}Asesor de la zona{{else}}Seleccione un Asesor{{/ifCond}}</option>
-	{{#each asesores}}
-		<option value="{{this.uid}}" data-user-name="{{this.userName}}" data-nombre="{{this.nombre}}" data-apellido="{{this.apellido}}">{{prettifyCN this.uid}}</option>
-	{{/each}}
-</select>	
