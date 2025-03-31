@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "description": "SMG"
+    },
+    {
+        "id": 2,
+        "description": "Osde"
+    },
+    {
+        "id": 3,
+        "description": "Galeno"
+    },
+    {
+        "id": 4,
+        "description": "Medicus"
+    },
+    {
+        "id": 5,
+        "description": "Omint"
+    },
+    {
+        "id": 6,
+        "description": "Medife"
+    },
+    {
+        "id": 7,
+        "description": "H. Italiano"
+    },
+    {
+        "id": 8,
+        "description": "Sancor Salud"
+    },
+    {
+        "id": 9,
+        "description": "Aca Salud"
+    },
+    {
+        "id": 10,
+        "description": "Accord Salud"
+    },
+    {
+        "id": 11,
+        "description": "H. Aleman"
+    },
+    {
+        "id": 12,
+        "description": "Otros"
+    }
+]

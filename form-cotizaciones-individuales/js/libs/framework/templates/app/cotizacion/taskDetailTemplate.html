@@ -1,0 +1,28 @@
+<table id="{{this.BK_ID}}" class="table table-striped table-bordered table-hover">
+    <tbody>
+        <tr>
+
+            <td class="span2">Fecha:</td>
+
+            <td class="span10"><a>{{dateFormat context.processDetail.altaFecha 'DD/MM/YYYY HH:mm'}}</a></td>
+        </tr>
+    </tbody>
+</table>
+<table class="table table-striped table-bordered table-hover">
+    <tbody>
+        <tr>
+            <td class="span2">Registrado por:</td>
+
+            <td class="span10"><a>{{prettifyCN context.process.registradoNombre}}</a></td>
+        </tr>
+    </tbody>
+</table>
+<table class="table table-striped table-bordered table-hover">
+    <tbody>
+    <tr>
+        <td class="span2">Observación:</td>
+
+        <td class="span10"><a>{{context.relatedProcessDetail.observacion}}</a></td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,46 @@
+<table id='listAddress' class="table table-striped table-bordered table-hover" style="margin: 0px">
+    <thead>
+        <tr>
+            <th>Calle</th>
+            <th>Numero</th>
+            <th>CP</th>
+            <th>CPA</th>
+            <th>Provincia</th>
+            <th>Partido</th>
+            <th>Localidad</th>
+            <th>Barrio</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each address}}
+            <tr>
+            <tr 
+            	data-calle="{{this.calle}}"
+            	data-barrio="{{this.barrio.desc}}" 
+            	data-altura="{{this.altura}}" 
+            	data-cp="{{this.cp}}" 
+            	data-cpa="{{this.cpa}}"
+            	data-localidadDesc="{{this.localidad.desc}}" 
+            	data-localidad="{{this.localidad.cod}}" 
+            	data-partidoDesc="{{this.partido.desc}}" 
+            	data-partido="{{this.partido.cod}}" 
+            	data-provinciaDesc="{{this.provincia.desc}}" 
+            	data-provincia="{{this.provincia.cod}}" 
+            	data-coordx="{{this.x}}" 
+            	data-coordy="{{this.y}}" 
+            	
+        	style="cursor:pointer;cursor:hand;"  class="selectAddress">	
+                <td>{{this.calle}}</td>
+                <td>{{this.altura}}</td>
+                <td>{{this.cp}}</td>
+                <td>{{this.cpa}}</td>
+                <td>{{this.provincia.desc}}</td>
+                <td>{{this.partido.desc}}</td>
+                <td>{{this.localidad.desc}}</td>
+                <td>{{this.barrio.desc}}</td>
+            </tr>
+        {{else}}
+            <tr><td colspan='7'>No se encontraron resultados</td></tr>
+        {{/each}}
+    </tbody>
+</table>

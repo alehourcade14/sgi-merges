@@ -1,0 +1,228 @@
+<style>
+    .popover {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-right: 5px;
+        margin-left: 10px;
+        width: 450px !important;
+        max-width: 100%;
+    }
+
+    .popover .table {
+        width: 100%; 
+    }
+
+    #processHistoryDataTable2 {
+        font-size: 10.6px;
+    }
+
+    .dataTables_filter,
+    .dataTables_info {
+        margin-right: 200px !important;
+    }
+
+    .dataTables_paginate {
+        margin-left: 10px !important;
+    }
+
+    .dataTables_paginate > ul {
+        display: block !important; /* Muestra el paginado en una linea */
+    }
+
+    #table-container {
+        border: 0px;
+    }
+</style>
+
+{{#if context.processDetail.condExAfi}}
+<div class="widget-body" id="table-container">
+    <div class="widget-main" style="padding: 0px;">
+        <div class="span12" id="titulo-tabla" style="background-color: dimgrey;padding-left: 10px; padding-right: 10px;padding-top: 5px;">
+            <div class="span8" style="text-align:left;color:white;font-size: 14px;font-weight: bold;"">Control Ex Afiliados</div>
+        </div>
+        <table id="processHistoryDataTable2" class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="ancho3">Tipo DNI</th>
+                <th class="ancho2">N° DNI</th>
+                <th class="ancho5">Apellido</th>
+                <th class="ancho3">Nombre</th>
+                <th class="ancho3">Contrato</th>
+                <th class="ancho3">Prepaga</th>
+                <th class="ancho5">Monto Deuda</th>
+                <th class="ancho6">Situación Terapéutica</th>
+                <th class="ancho4">Plan Médico</th>
+                <th class="ancho2">Integrante</th>
+                <th class="ancho2">Parentesco</th>
+                <th class="ancho4">Ingreso Fecha</th>
+                <th class="ancho4">Baja Fecha</th>
+                <th class="ancho5">Motivo baja</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each ../context.processDetail.condExAfi}}
+                <tr style="cursor: default">
+                    <td>{{this.docu_tipo}}</td>
+                    <td>{{this.nro_doc}}</td>
+                    <td>{{this.ape}}</td>
+                    <td>{{this.nombre}}</td>
+                    <td>{{this.contra}}</td>
+                    <td>{{this.prepaga_deno}}</td>
+                    <td>{{this.monto_notificado}}
+                        {{#if this.bloqueante}}
+                            <span class="help-button" 
+                                data-rel="popover"
+                                data-trigger="hover" 
+                                data-placement="bottom" 
+                                data-html="true" 
+                                data-content="
+                                {{this.mensaje_monto}}
+                                "
+                                style="cursor: pointer;background-color: #da4f49;">
+                                <i class="fa fa-exclamation bigger-120 monto-info"></i>
+                            </span>
+                        {{else}}
+                            <span class="help-button" 
+                                    data-rel="popover"
+                                    data-trigger="hover" 
+                                    data-placement="bottom" 
+                                    data-html="true" 
+                                    data-content="
+                                    {{this.mensaje_monto}}
+                                    "
+                                    style="cursor: pointer;">
+                                    <i class="fa fa-info bigger-120 monto-info"></i>
+                            </span>
+                        {{/if}}
+                    </td>
+                    <td class="td-actions">
+                        {{#if this.situ_terapeuticas}} 
+                            Ver situaciones
+                            <span class="help-button" 
+                                data-rel="popover"
+                                data-trigger="hover" 
+                                data-placement="bottom" 
+                                data-html="true" 
+                                data-content="
+                                    <table class='table'>
+                                        <thead>
+                                            <tr>
+                                                <th>Situacion Terapéutica Bloqueantes</th>
+                                                <th>Condición</th>
+                                                <th>Fecha desde</th>
+                                                <th>Fecha Hasta</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each ../this.situ_terapeuticas}}
+                                                <tr>
+                                                    <td>{{this.st_situ}}</td>
+                                                    <td>{{this.stc_condi}}</td>
+                                                    <td>{{prettifyDate this.sh_fecha_desde}}</td>
+                                                    <td>{{prettifyDate this.sh_fecha_hasta}}</td>
+                                                </tr>
+                                            {{/each}}
+                                        </tbody>
+                                    </table>
+                                "
+                                style="cursor: pointer;background-color: #da4f49;">
+                                <i class="fa fa-exclamation bigger-120 informacion"></i>
+                            </span>
+                        {{else}} 
+                            
+                        {{/if}}
+                    </td>
+                    <td>{{this.plan_codi}}</td>
+                    <td>{{this.inte}}</td>
+                    <td>{{this.paren_deno}}</td>
+                    <td>{{prettifyDate this.ingre_fecha}}</td>
+                    <td>{{#if this.baja_fecha}} 
+                        {{prettifyDate this.baja_fecha}}
+                        {{#if ../this.baja_futura}}
+                        <span class="help-button" 
+                            data-rel="popover"
+                            data-trigger="hover" 
+                            data-placement="bottom" 
+                            data-html="true" 
+                            data-content="Es motivo bloqueante por ser socio activo."
+                            style="cursor: pointer;background-color: #da4f49;">
+                            <i class="fa fa-exclamation bigger-120 monto-info"></i>
+                        </span>
+                        {{else}}
+                        <span class="help-button" 
+                            data-rel="popover"
+                            data-trigger="hover" 
+                            data-placement="bottom" 
+                            data-html="true" 
+                            data-content="No es motivo bloqueante."
+                            style="cursor: pointer;">
+                            <i class="fa fa-info bigger-120 monto-info"></i>
+                        </span>
+                        {{/if}}
+                    {{else}}
+                        Activo<span class="help-button" 
+                            data-rel="popover"
+                            data-trigger="hover" 
+                            data-placement="bottom" 
+                            data-html="true" 
+                            data-content="Es motivo bloqueante por presentar un contrato activo"
+                            style="cursor: pointer;background-color: #da4f49;">
+                            <i class="fa fa-exclamation bigger-120 monto-info"></i>
+                        </span>
+                    {{/if}}</td>
+                    <td>{{this.deno_moti_baja}}
+                        {{#ifCond this.deno_moti_baja 'LEGALES'}}
+                        <span class="help-button" 
+                            data-rel="popover"
+                            data-trigger="hover" 
+                            data-placement="bottom" 
+                            data-html="true" 
+                            data-content="Es motivo bloqueante."
+                            style="cursor: pointer;background-color: #da4f49;">
+                            <i class="fa fa-exclamation bigger-120 monto-info"></i>
+                        </span>
+                        {{else}}
+                         {{#if ../this.deno_moti_baja}}
+                            <span class="help-button" 
+                                data-rel="popover"
+                                data-trigger="hover" 
+                                data-placement="bottom" 
+                                data-html="true" 
+                                data-content="No es motivo bloqueante."
+                                style="cursor: pointer;">
+                                <i class="fa fa-info bigger-120 monto-info"></i>
+                            </span>
+                          {{/if}}
+                        {{/ifCond}}
+                    </td>
+                </tr>
+            {{else}}
+            <tr><td colspan='15'>No se encontraron resultados</td></tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+{{/if}}
+
+<script type="text/javascript">
+$(function () {
+        $('[data-rel=popover]').popover({html: true});
+        $('[data-rel=tooltip]').tooltip();
+        $("#observ").click();
+        $('[data-rel=tooltip]').tooltip(); 
+    });
+
+    $(function () {
+        $('#processHistoryDataTable2').DataTable({
+            "bStateSave": true,
+            "iDisplayLength": 5,
+            "aLengthMenu": [5, 10, 20],
+            "aaSorting": []
+        });
+    });
+
+
+</script>
+

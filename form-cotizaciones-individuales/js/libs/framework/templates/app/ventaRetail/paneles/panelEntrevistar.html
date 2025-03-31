@@ -1,0 +1,296 @@
+<style>
+	.ribbon-banner {
+		position: absolute;
+		bottom: 0px;
+		margin: 5px;
+		height: 20px;
+		text-align: center;
+		opacity: 0.7;
+		font-size: 10px;
+		font-weight: 700;
+		z-index: 2000;
+	}
+</style>
+<input name="user[id]"              value="{{userId}}" type="hidden">
+<input name="user[username]"        value="{{userName}}" type="hidden">
+<input name="user[name]"            value="{{prettifyCN userId}}" type="hidden">
+<input name="task[id]"              value="{{tasks.id}}" type="hidden">
+<input name="task[name]"            value="{{tasks.name}}" type="hidden">
+{{#each tasks.actions}}
+<input name="process[action]"       value="{{this.action}}" type="hidden">
+{{/each}}
+<input name="process[variables][workContext]"  value="AMB_COMERCIAL" type="hidden">
+
+<input name="process[variables][processInfo][id]"  value="0" type="hidden">
+<input name="process[variables][processInfo][name]"  value="{{motive}}" type="hidden">
+<input name="process[variables][processInfo][description]"  value="{{motive}}" type="hidden">
+<input name="process[variables][processInfo][credencial]"  value="" type="hidden">
+<input name="process[variables][processInfo][afiliado]"  value="" type="hidden">
+
+<input name="process[id]"       value="{{tasks.processId}}" type="hidden">
+<input name="process[version]"  value="1" type="hidden">
+<input name="process[processName]"  value="{{tasks.processName}}" type="hidden">
+<input name="process[key]"      value="{{workflowId}}" type="hidden">
+<input name="process[status]"  value="Running" type="hidden">
+<input name="process[workContext]"  value="{{subsidiary}}" type="hidden">
+<input name="process[credencial]"  value="" type="hidden">
+<input name="process[afiliado]"  value="" type="hidden">
+<input name="process[vip]"  value="" type="hidden">
+<input name="process[currentNodeName]"  value="" type="hidden">
+<input name="process[ambitoGestion]"  value="{{subsidiary}}" type="hidden">
+<input name="process[customerName]"  value="" type="hidden">
+<input name="reserva[id]" value="{{workflowId}}" type="hidden">
+
+
+<!--PAGE CONTENT BEGINS-->
+
+	
+<div class="row-fluid">
+		<div id="scrollableArea" style="overflow-y: auto; overflow-x: hidden;">
+											
+			<div id="wizard" class="row-fluid hide ace-wizard" data-target="#step-container-entrevistar">
+					<ul class="wizard-steps" style="zoom:80%">
+	
+					<li data-target="#step1-entrevistar"  class="active">
+						<span class="step" id="step1">1</span>
+						<span class="title">Datos Grupo Familiar</span>
+					</li>
+					
+					<li data-target="#step2-entrevistar">
+						<span class="step" id="step2">2</span>
+						<span class="title">Detalle Cotizaci&oacute;n</span>
+					</li>
+
+				</ul>
+
+			</div>
+		
+			<hr />
+			
+			<div class="step-content row-fluid position-relative" id="step-container-entrevistar" style="overflow-y:auto; overflow-x: hidden;">
+				
+				<div class="step-pane active" id="step1-entrevistar">
+					<div class="datosGrupoFamiliarStep" id="datosGrupoFamiliarStep">
+					</div>
+					<div id="completarGrupoFamiliarContainer"></div>
+				</div>
+				<!--Fin step1-contactar-->
+				<div class="step-pane" id="step2-entrevistar">	
+					<div class="detalleStep" id="detalleStep">
+					</div>
+				</div>
+				<!--Fin step2-contactar-->
+			</div>
+		</div>
+		<hr />
+		
+		<div class="row-fluid wizard-actions">
+		
+			<!--Muestra botones segun Handlebars-->
+			<div id="wizard-acciones">	
+			</div>
+
+		</div>
+	
+</div><!--/widget-main-->
+			
+
+
+<script src="../static/js/libs/thirds/jquery/jquery.gritter.min.js"></script>
+<script src="../static/js/libs/thirds/jquery/jquery.autosize-min.js"></script>
+<script src="../static/js/libs/thirds/jquery/jquery.inputlimiter.1.3.1.min.js"></script>
+<script src="../static/js/libs/thirds/jquery/jquery.overlay.js"></script>
+<script src="../static/js/libs/thirds/jquery/jquery.textcomplete.js"></script>
+
+<script src="../static/js/libs/thirds/jquery/fuelux/fuelux.wizard.min.js"></script>
+<script src="../form-cotizaciones-individuales/js/libs/thirds/jquery/jquery.validate.min.js"></script>
+<script src="../static/js/libs/thirds/jquery/additional-methods.min.js"></script>
+<script src="../static/js/libs/thirds/jquery/bootbox.min.js"></script>
+<script src="../static/js/libs/thirds/jquery/jquery.maskedinput.min.js"></script>
+<script src="../static/js/libs/thirds/jquery/select2.min.js"></script>
+
+<script type="text/javascript">
+	//$('#txtmailparticular').mask('(999) 999-9999');
+	//$("#celPais").mask("99", {placeholder: '54'});
+	$("#txtDocumento").mask("99-99999999-9");
+
+	$(".input-mask-text").bind("input", function(event) {
+		var out = "";
+		var str = this.value;
+		for (var i = 0; i < str.length; i++) {
+			if (!(/[0-9]/.test(str.charAt(i)))) {
+				out = out.concat(str.charAt(i));
+			}
+		}
+		this.value = out;
+	});
+
+	$(".input-mask-text-numbers").bind("input", function(event) {
+		var out = "";
+		var str = this.value;
+		for (var i = 0; i < str.length; i++) {
+			if ((/[0-9a-zA-Z &ñÑáéíóú]/.test(str.charAt(i)))) {
+				out = out.concat(str.charAt(i));
+			}
+		}
+		this.value = out;
+	});
+
+	$(".input-mask-numbers").bind("input", function(event) {
+		var out = "";
+		var str = this.value;
+		for (var i = 0; i < str.length; i++) {
+			if (/[0-9]/.test(str.charAt(i))) {
+				out = out.concat(str.charAt(i));
+			}
+		}
+		this.value = out;
+	});
+
+	window.onresize = function() {
+		if ($(window).height() < 100) {
+			var elemToChange = document.getElementById("page-content");
+			elemToChange.style.height = parent.document.body.clientHeight + "px";
+		} else {
+			var elemToChange = document.getElementById("page-content");
+			elemToChange.style.height = $(window).height() + "px";
+		}
+	};
+
+	if ($(window).height() < 100) {
+		var elemToChange = document.getElementById("page-content");
+		elemToChange.style.height = parent.document.body.clientHeight + "px";
+	} else {
+		var elemToChange = document.getElementById("page-content");
+		elemToChange.style.height = $(window).height() + "px";
+	}
+
+	$(function() {
+
+		$('.ace-wizard').ace_wizard();
+
+		$('.step').click(function(event) {
+
+			var step = $(this).attr('id');
+
+			var panelActual = $(this).closest('ul').find('li.active').attr('data-target');
+			var stepActual = (panelActual.split('-')[0]).substring(1);
+
+			$('.ace-wizard-btn-prev').data('stepActual',panelActual);
+			$('.ace-wizard-btn-next').data('stepActual',panelActual);
+
+			if(step.replace('step','') > stepActual.replace('step','')){
+				$('.ace-wizard-btn-next').click();
+			}else{
+				$('.ace-wizard-btn-prev').click();
+			}
+			
+        });
+        
+        $('.ace-wizard-btn-prev').click(function() {
+        	$('.ace-wizard').wizard('previous');
+        });
+
+		$('[data-rel=tooltip]').tooltip();
+
+		$(".select2").css('width', '150px').select2({
+			allowClear : true
+		}).on('change', function() {
+			$(this).closest('form').validate().element($(this));
+		});
+
+		$('#fuelux-wizard').ace_wizard();
+
+		$.mask.definitions['~'] = '[+-]';
+		$('#phone').mask('(999) 999-9999');
+
+		$('#modal-wizard .modal-header').ace_wizard();
+		$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
+	});
+
+	window.onresize = function() {
+		var elemToChange = document.getElementById("step-container-entrevistar");
+		elemToChange.style.height = $(window).height() - 350 + "px";
+	};
+
+	var elemToChange = document.getElementById("step-container-entrevistar");
+	elemToChange.style.height = $(window).height() - 240 + "px";
+
+	$(function() {
+		
+
+		$('textarea[class*=autosize]').autosize({
+			append : "\n"
+		});
+		$('textarea[class*=limited]').each(function() {
+			var limit = parseInt($(this).attr('data-maxlength')) || 100;
+			$(this).inputlimiter({
+				"limit" : limit,
+				remText : '%n disponible%s...',
+				limitText : 'caracteres maximos : %n.'
+			});
+		});
+
+		$(".text").css("width", "100%");
+		$("input").keydown(function(e) {
+			if (e.keyCode == 219) {
+				return false;
+			} else {
+				return true;
+			}
+		});
+		$('textarea').keydown(function(e) {
+			if (e.keyCode == 219) {
+				return false;
+			} else {
+			}
+		});
+	});
+
+	$.extend(jQuery.validator.messages, {
+		required : "Este campo es obligatorio.",
+		remote : "Por favor, rellena este campo.",
+		email : "Ingrese una dirección de correo válida",
+		url : "Por favor, escribe una URL válida.",
+		date : "Por favor, escribe una fecha válida.",
+		dateISO : "Por favor, escribe una fecha (ISO) válida.",
+		number : "Por favor, escribe un número entero válido.",
+		digits : "Por favor, escribe sólo dígitos.",
+		creditcard : "Por favor, escribe un número de tarjeta válido.",
+		equalTo : "Por favor, escribe el mismo valor de nuevo.",
+		accept : "Por favor, escribe un valor con una extensión aceptada.",
+		maxlength : jQuery.validator.format("Por favor, no escribas más de {0} caracteres."),
+		minlength : jQuery.validator.format("Por favor, no escribas menos de {0} caracteres."),
+		rangelength : jQuery.validator.format("Por favor, escribe un valor entre {0} y {1} caracteres."),
+		range : jQuery.validator.format("Por favor, escribe un valor entre {0} y {1}."),
+		max : jQuery.validator.format("Por favor, escribe un valor menor o igual a {0}."),
+		min : jQuery.validator.format("Por favor, escribe un valor mayor o igual a {0}.")
+	});
+	
+	function cargarElTipoDeTelefono(){
+		var tipoTelefono = $("#tipoTelefono").val();
+		if (tipoTelefono === 'L') {
+			// $('#celExt').prop('disabled', false);
+			$('#celExt').prop('type', 'text');
+		} else {
+			// $('#celExt').prop('disabled', true);
+			$('#celExt').prop('type', 'hidden');
+		}
+	};
+
+</script>
+
+<script type="text/javascript">
+
+	$(".input-mask-numbers").bind("input", function(event) {
+		var out = "";
+		var str = this.value;
+		for (var i = 0; i < str.length; i++) {
+			if (/[0-9]/.test(str.charAt(i))) {
+				out = out.concat(str.charAt(i));
+			}
+		}
+		this.value = out;
+	});
+
+</script>

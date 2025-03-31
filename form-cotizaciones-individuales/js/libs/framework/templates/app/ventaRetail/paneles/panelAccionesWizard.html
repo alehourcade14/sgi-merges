@@ -1,0 +1,168 @@
+<style>
+    .mi-boton-cotizar {
+        width: 120px;
+        cursor: pointer;
+        position: relative;
+        margin-left: 15px; 
+    }
+</style>
+
+
+
+{{#ifCond acciones.mostrarFinalizarHide true}}
+<button id="btnFinalizar" class="btn btn-danger ace-wizard-btn-next"  style="display: none" data-last="Finalizar" onclick="return false;">
+    Finalizar
+</button>
+{{/ifCond}}
+
+{{#ifCond acciones.mostrarCotizar true}}
+    <button id="btnCotizar" class="btn btn-danger ace-wizard-btn-next mi-boton-cotizar" data-last="Cotizar" onclick="return false;">Cotizar</button>
+{{else}}
+    <!--Se usa para recotizar-->
+    <button id="btnCotizar" class="btn btn-danger ace-wizard-btn-next pull-right" data-last="Cotizar" onclick="return false;"  style="display: none">Cotizar</button>
+{{/ifCond}}
+
+{{#ifCond acciones.mostrarVolver true}}
+    <button id="btnVolver" class="btn ace-wizard-btn-prev" onclick="return false;">
+    <i class="icon-arrow-left"></i>
+    Volver
+    </button>
+{{/ifCond}}
+
+{{#ifCond acciones.mostrarSiguiente true}}
+    <button id="btnContinuar" class="btn btn-danger ace-wizard-btn-next" data-last="Siguiente" onclick="return false;">
+    Siguiente
+    <i class="icon-arrow-right icon-on-right"></i>
+    </button>
+{{/ifCond}}
+
+{{#ifCond acciones.mostrarActionStepUnoContactar true}}
+
+<div class="span11" style="position:relative;left:64px">     
+     <div id="controlActions" class="controls input-append" style="margin: 0px; padding: 10px">
+          
+          <label id="lblMotivosRechazoContainer" class="control-label" for="motivosRechazoContainer" style="display:none">Motivo<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+          
+		  <div class="span1" id="motivosRechazoContainer" style="margin-left: 10px;margin-right: 140px; padding: 0px">
+               <!-- motivos de rechazo -->
+          </div>
+          <div class="span1" id="documentacionFaltanteContainer" style="margin-left: 10px;margin-right: 140px; padding: 0px">
+                <!-- documentacion faltante -->
+          </div>
+		  
+          <select id="actions" name="process[variables][action]">
+               	<option id="" data-status="" data-status-description="" value="">--Seleccione una acción--</option>
+                {{#each ../context.actionStepUnoContactarList}}
+                <option id="{{this.id}}"
+                    data-status="{{this.status.id}}"
+                    data-status-description="{{this.status.description}}"
+                    value="{{this.action}}">{{this.description}}
+                </option>
+                {{/each}}
+          </select>
+          
+          <span id="btnSaveAndEndTask" class="add-on btn-danger" style="cursor: pointer">
+          		<i class="icon-arrow-right icon-on-right"></i>
+          </span>
+     </div>
+</div>
+
+{{/ifCond}}
+
+{{#ifCond acciones.mostrarActionStepDosContactar true}}
+
+<div class="span11" style="position:relative;left:64px">     
+     <div id="controlActions" class="controls input-append" style="margin: 0px; padding: 10px">
+          
+        {{#ifCond acciones.mostrarContacto true}}
+            <div class="control-group span1" id="contactoContainer" style="margin-right: 235px;padding: 0px">
+                <label id="lbcontactoContainer"  style="margin-right: 10px" class="control-label" for="contactoContainer">Contacto<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+
+                <select id="contacto" name="contacto" data-type="integer">
+                    <option id="" value="">--Seleccione--</option>
+                    {{#each context.contacto}}
+                        <option id="{{this.id}}" value="{{this.id}}">{{this.descripcion}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        {{/ifCond}}
+
+          <label id="lblMotivosRechazoContainer" class="control-label" for="motivosRechazoContainer" style="display:none">Motivo<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+          
+		  <div class="span1" id="motivosRechazoContainer" style="margin-left: 10px;margin-right: 140px; padding: 0px">
+               <!-- motivos de rechazo -->
+          </div>
+		  
+          <select id="actions" name="process[variables][action]">
+               	<option id="" data-status="" data-status-description="" value="">--Seleccione una acción--</option>
+                {{#each ../context.actionStepDosContactarList}}
+			       <option id="{{this.id}}" data-status="{{this.status.id}}"
+			               data-status-description="{{this.status.description}}"
+			               value="{{this.action}}">{{this.description}}
+			       </option>
+			    {{/each}}
+          </select>
+          
+          <span id="btnSaveAndEndTask" class="add-on btn-danger" style="cursor: pointer">
+          		<i class="icon-arrow-right icon-on-right"></i>
+          </span>
+     </div>
+</div>
+
+{{/ifCond}}
+{{#ifCond acciones.mostrarTransicionarStepTres true}}
+<div style="display: flex; align-items: center;">
+    {{#ifCond acciones.enviarLink true}}
+        <button id="btnEnviarLink" class="btn btn-danger" style="margin-right: 20px; padding: 5px 10px; white-space: nowrap;" onclick="return false;">
+            <i class="fa fa-link"></i>
+            Enviar Link
+        </button>
+    {{/ifCond}}
+
+    <div class="span11" style="position:relative;left:64px">
+        <div id="motivoReservaDiv" class="control-group"></div>
+        <div id="controlActions" class="controls input-append" style="margin: 0px;">
+                {{#ifCond acciones.mostrarDocumentacionFaltante true}}
+    
+                    <div class="span1" id="documentacionFaltanteContainer" style="margin-right: 235px;padding: 0px">
+                     <label id="lbDocumentacionFaltanteContainer"  style="margin-right: 10px" class="control-label" for="documentacionFaltanteContainer">Documentacion Faltante:</label>
+    
+                        <select id="documentacionFaltante" name="documentacionFaltante" data-type="integer">
+                            <option id="" value="">--Seleccione--</option>
+                            {{#each context.documentacionFaltante}}
+                                <option id="{{this.id}}" value="{{this.id}}">{{this.descripcion}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                {{/ifCond}}
+                <label id="lblMotivosRechazoContainer" class="control-label" for="motivosRechazoContainer" style="display:none">Motivo<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+             
+                <div class="span1" id="motivosRechazoContainer" style="margin-left: 10px;margin-right: 140px; padding: 0px">
+                    <!-- motivos de rechazo -->
+                </div>
+                
+             <select id="actions" name="process[variables][action]">
+                <option id="" data-status="" data-status-description=""
+                        value="">--Seleccione una acción--</option>
+                    {{#each ../context.task.actions}}
+                <option id="{{this.id}}"
+                        data-status="{{this.status.id}}"
+                        data-status-description="{{this.status.description}}"
+                        value="{{this.action}}">{{this.description}}
+                </option>
+                    {{/each}}
+            </select>
+             
+             <span id="btnSaveAndEndTask" class="add-on btn-danger" style="cursor: pointer">
+                     <i class="icon-arrow-right icon-on-right"></i>
+             </span>
+             {{#ifNotCond acciones.mostrarVolverTransicion false}}
+                <span id="btnVolver" class="ace-wizard-btn-prev add-on btn-danger" title="Volver" style="cursor: pointer;margin-left: 1em" >
+                    <i class="icon-arrow-left icon-on-left"></i>
+                </span>
+             {{/ifNotCond}}
+        </div>
+    </div>
+</div>
+
+{{/ifCond}}

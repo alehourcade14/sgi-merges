@@ -1,0 +1,36 @@
+
+<div class="error-container">
+    <div class="well">
+        <h1 class="red lighter smaller">
+            <span class="red bigger-125">
+                <i class="icon-sitemap"></i>
+                {{codeError}}
+            </span>
+            {{titleError}}
+        </h1>
+
+        <hr />
+        <h3 id="body-error" class="lighter smaller">{{descriptionError}}</h3>
+    </div>
+</div><!--PAGE CONTENT ENDS-->
+
+
+<script type="text/javascript">
+    
+    window.onresize=function() {
+        var elemToChange = document.getElementById("page-content");
+        elemToChange.style.height = $(window).height() + "px";
+    };
+    
+    var elemToChange = document.getElementById("page-content");
+    elemToChange.style.height = $(window).height() + "px";
+    
+
+    window.onresize=function() {
+        var elemToChange = document.getElementById("body-error");
+        elemToChange.style.height = $(window).height() - 175 + "px";
+    };
+    
+    var elemToChange = document.getElementById("body-error");
+    elemToChange.style.height = $(window).height() - 175 + "px";
+</script>

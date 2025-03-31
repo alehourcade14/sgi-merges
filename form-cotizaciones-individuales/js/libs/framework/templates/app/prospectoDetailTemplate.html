@@ -1,0 +1,316 @@
+<style>
+    a {
+       color: #dd5a43;
+    }
+    
+    .table-header {
+        background-color: #B0B0B0 !important;
+    }
+
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+        color: #585858;
+        border-color: #585858;
+        border-top: 2px solid #585858;
+        border-bottom-color: transparent;
+    }
+
+    .breadcrumb>li>a {
+        color: #585858 !important;
+    }
+    
+    .menu-text{
+        color: #585858 !important;
+    }
+    
+    .nav-list>li .submenu>li.active>a {
+        color: #585858 !important;
+    }
+    
+    .nav-list>li a:hover>.arrow, .nav-list>li.active>a>.arrow, .nav-list>li.open>a>.arrow {
+        color: #585858 !important;
+    }
+    
+    .nav-list>li.active:after {
+        border-right: 2px solid #585858 !important;
+    }
+    
+    .nav-list>li.active>a, .nav-list>li.active>a:hover, .nav-list>li.active>a:focus, .nav-list>li.active>a:active {
+        color: #585858 !important;
+    }
+    
+    .nav-list li.active>a:after {
+        border-right-color:  #585858 !important;
+    }
+</style>
+
+<div class="row-fluid">
+    <div class="span9">
+        <div id="tabs-container" class="tab-content no-border padding-2">
+                    <div id="detalle-content-tab" class="tab-pane in active" style="padding-left: 24px;padding-right: 24px; padding-top: 15px;">
+                        <div class="row-fluid">
+                            <div class="span9">
+                                <div class="row-fluid">
+                                    <div class="span9">
+                                        <h4 class="grey">
+                                            <ul>
+                                                <li class="dropdown" style="list-style-type: none;font-size: 15px;">
+												   <i class="icon-user grey" style="font-size: 20px;" ></i>
+													<b>{{prospecto.apellido}}, {{prospecto.nombre}}</b>
+                                              </li>
+                                            </ul>
+                                        </h4>
+                                    </div>
+                                </div>
+
+				                <input id="solicitante" type="hidden" value="{{prospecto.nombre}} {{prospecto.apellido}}" />
+								<input id="entityJBPM" type="hidden" value="PRO-{{prospecto.pk.idProsp}}" />
+								
+                                <input id="task" type="hidden" value="{{prospecto.task}}" />
+                                <input id="taskId" type="hidden" value="{{prospecto.taskid}}" />
+                                <input id="processId" type="hidden" value="{{prospecto.processId}}" />
+                                <input id="prospecto" type="hidden" value="{{json}}" />
+                                <input id="entityId" type="hidden" value="{{entityId}}" />
+                                <input id="idProspecto" type="hidden" value="{{prospecto.pk.idProsp}}" />
+                                <input id="persTipo" type="hidden" value="{{prospecto.persTipo}}" />
+                                
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="widget-box transparent">
+                                            <div class="widget-body">
+                                                <div class="widget-main padding-6 no-padding-left no-padding-right">
+                                                    <div class="row-fluid">
+                                                        <div class="profile-user-info"  style="margin-right: 20px;">
+                                                            <div class="profile-info-row">	
+																<div class="profile-info-name">Tipo</div>
+	                                                            <div class="profile-info-value">
+																	<span>{{prospecto.docTipo}}</span>
+	                                                            </div>
+															</div>
+															
+															<div class="profile-info-row">
+																<div class="profile-info-name">Documento</div>
+	                                                            <div class="profile-info-value">
+																	<span>{{prospecto.docNum}}</span>
+	                                                            </div>
+                                                            </div>
+                                                            
+															<div class="profile-info-row">
+                                                                <div class="profile-info-name">Direcci&#243;n</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.calle}}
+                                                                        <span>{{prospecto.domicilio.calle}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">N&#250;mero</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.nro}}
+                                                                        <span>{{prospecto.domicilio.nro}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Piso</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#notEmpty prospecto.domicilio.piso}}
+                                                                        <span>{{prospecto.domicilio.piso}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/notEmpty}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Departamento</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#notEmpty prospecto.domicilio.dto}}
+                                                                        <span>{{prospecto.domicilio.dto}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/notEmpty}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Oficina</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#notEmpty prospecto.domicilio.oficina }}
+                                                                        <span>{{prospecto.domicilio.oficina}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/notEmpty}}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                        <div class="widget-box transparent">
+                                            <div class="widget-body">
+                                                <div class="widget-main padding-6 no-padding-left no-padding-right">
+                                                    <div class="row-fluid">
+                                                          <div class="profile-info-row">
+                                                                <div class="profile-info-name">País</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.paisId}}
+                                                                        <span>{{prospecto.domicilio.pais}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Provincia</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.provinciaId}}
+                                                                        <span>{{prospecto.domicilio.provincia}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Partido</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.partidoId}}
+                                                                        <span>{{prospecto.domicilio.partido}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Localidad</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.localidadId}}
+                                                                        <span>{{prospecto.domicilio.localidad}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Barrio</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.barrio}}
+                                                                        <span>{{prospecto.domicilio.barrio}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="profile-info-row">
+                                                                <div class="profile-info-name">Código Postal</div>
+                                                                <div class="profile-info-value">
+                                                                    {{#if prospecto.domicilio.codPostal}}
+                                                                        <span>{{prospecto.domicilio.codPostal}}</span>
+                                                                    {{else}}    
+                                                                        <span>N/A</span>
+                                                                    {{/if}}
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>      
+                            </div>
+                            
+                            
+                        </div><!--/row-fluid-->
+
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <div class="widget-box transparent">
+                                    <div class="widget-header">
+                                        <h3 class="lighter grey">Medios de contacto</h3>
+
+                                        <div class="widget-toolbar no-border">
+                                            <a data-action="collapse">
+                                                <i class="icon-chevron-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="widget-body">
+                                        <div class="widget-main padding-6 no-padding-left no-padding-right">
+                                            <div class="row-fluid">
+                                                <ul class="unstyled spaced">
+                                                	
+                                                	{{#if prospecto.emails}}
+	                                                    {{#each prospecto.emails}}
+	                                                        <li>
+	                                                            <i class="icon-envelope grey bigger-110"></i>
+	                                                            Email {{this.email_tipo_den}}:
+	                                                            <b class="grey">
+	                                                                <span><a id="email{{this.email_tipo_den}}" href="mailto:{{this.denominacion}}" value="{{this.denominacion}}">&nbsp;{{this.denominacion}}</a></span>
+	                                                            </b>
+	                                                        </li>
+	                                                    {{/each}}
+	                                                    <div class="hr dotted"></div>
+                                                    {{/if}}
+                                                	
+                                                	
+                                                    
+                                                    {{#if prospecto.telefonos}}
+	                                                    {{#each prospecto.telefonos}}
+	                                                         <li>
+	                                                            <i class="icon-phone green bigger-110"></i>
+	                                                            {{this.tipo_tele_den}}:
+	                                                            <b class="green">
+	                                                                &nbsp;
+	                                                                <span>{{this.codigo_pais}}</span>
+	                                                                <span>{{this.codigo_nacional}}</span>
+	                                                                <span>{{this.numero}}</span>
+	                                                                {{#if this.extension }}
+	                                                                    {{#ifNotCond this.interno ' '}}
+	                                                                        <span>{{this.interno}}</span>
+	                                                                    {{/ifNotCond}}
+	                                                                {{/if}}
+	                                                            </b>
+	                                                        </li>
+	                                                    {{/each}}
+	                                                    <div class="hr dotted"></div>
+                                                    {{/if}}
+                                                    
+                                                        
+                                                    
+                                                    
+                                                </ul>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                            
+						</div>
+                    </div><!--#home-->
+
+                </div>
+    </div><!--/span-->
+</div>
+
+<script>
+	$(function() {
+		$("#iconCustomer").removeClass("icon-spinner icon-spin");
+		$("#iconCustomer").addClass("icon-list-alt");
+	});
+
+</script>
+

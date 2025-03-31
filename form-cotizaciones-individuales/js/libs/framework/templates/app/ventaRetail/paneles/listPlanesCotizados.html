@@ -1,0 +1,239 @@
+<style>
+	.nopadding {
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+	</style>
+	<div class="row-fluid">
+		
+		<!-- {{#if processDetail}}
+		<div class="control-group span6">
+			<label class="control-label" for="estado[id]">Estado:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="estado[descripcion]" type="hidden" value=""/>
+					<label class="control-label" style="width: auto;"><b>{{processDetail.estado.descripcion}}</b></label>
+				</div>
+			</div>
+		</div>
+		{{/if}} -->
+		
+		<div id="divVentaMotivo" class="control-group span6" style="display: none">
+			<label class="control-label" for="motivo[id]">Motivo <i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="motivo[descripcion]" type="hidden" value=""/>
+					<select class="span8" id="ventaMotivo" name="motivo[id]">
+						<option id="optionVentaMotivo1" value="1">Sin venta por precio</option>
+						<option id="optionVentaMotivo2" value="2">Sin venta por producto</option>
+						<option id="optionVentaMotivo3" value="3">Sin venta imposible contactar</option>
+						<option id="optionVentaMotivo4" value="4">Sin venta por Preexistencia</option>
+						<!--<option id="optionVentaMotivo5" value="5">Sin venta por Cartilla</option>-->
+						<option id="optionVentaMotivo6" value="5">Sin venta por servicio</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="row-fluid">
+		<div class="control-group span12">
+			<div class="control-group">
+				<label class="control-label" for="observacion">Observación</label>
+			
+				<div class="controls">
+					<textarea id="observacion" name="observacion" class="span12 limited" id="form-field-9" 
+					data-maxlength="800" maxlength="800" style="width: 70%; height: 100px">{{processDetail.observacion}}</textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{#hasRole 'SGI_ASESOR_FFVV'}}
+	<div class="row-fluid span12" style="margin-left: 0px !important">
+		<div class="span4">
+			<label class="span12" for="probabilidad" class="control-label " style="text-align: left;margin-left: 5px;">Probabilidad de &Eacute;xito:</label>
+			<div class="span4">
+				<input class="span12" id="probExitoVenta" name="forecast[probExitoVenta]" type="number" value="{{forecast.confProbabilidad.probabilidad}}" style="margin: 0px;" min="{{forecast.confProbabilidad.probabilidad}}" 
+				data-type="float" {{#if forecast.confProbabilidad.readOnly}}readOnly max="{{forecast.confProbabilidad.probabilidad}}"{{else}}max="75"{{/if}} onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.keyCode > 95 && event.keyCode < 106 != event.keyCode == 8)">
+			</div>
+			<div class="span1">
+				<label style="margin-top: 3px;">%</label>
+			</div>
+		</div>
+	
+		<div class="span4">
+			<label class="span12" for="ponderado" class="control-label " style="text-align: left;margin-left: 5px;">Forecast Ponderado:</label>
+			<div class="span4">
+				<input class="span12" id="ponderado" name="forecast[ponderado]" type="text" value="{{forecast.ponderado}}" style="margin: 0px;" readOnly>
+			</div>
+			<div class="span1">
+				<span class="help-button" data-rel="popover" data-trigger="click"
+				data-placement="" data-html="true"
+				data-content="Cápitas * PMPM * Probabilidad de éxito." 
+				style="cursor: pointer;">i
+				</span>
+			</div>
+		</div>
+
+		<div class="span4">
+			<label class="span12" for="sinPonderar" class="control-label " style="text-align: left;margin-left: 5px;">Forecast sin Ponderar:</label>
+			<div class="span4">
+				<input class="span12" id="sinPonderar" name="forecast[sinPonderar]" type="text" value="{{forecast.sinPonderar}}" style="margin: 0px;" readOnly>
+			</div>
+			<div class="span1">
+				<span class="help-button" data-rel="popover" data-trigger="click"
+				data-placement="" data-html="true"
+				data-content="Cápitas * PMPM." 
+				style="cursor: pointer;">i
+				</span>
+			</div>
+		</div>
+		<input name="forecast[capitas]" value="{{forecast.capitas}}" type="hidden" data-type="integer">
+	</div>
+	<br>
+	{{/hasRole}}
+
+	{{#if cotizacion.planes}}
+	<div  class="row-fluid" >
+		{{#if error}}
+			<div class="span12 center">
+				<span class="text-error"><i class="icon-remove red"></i> Error en Afilmed al Cotizar.</span> <br/>
+				<span class="muted">{{error.cod_error}} : {{error.deno_error}}</span>
+			</div>
+		{{else}}
+		<div class="row-fluid" >
+			<intput id="hiddenExportPDF" type="hidden" />
+			<button id="btnExportPDF" class="btn btn-danger pull-left exportPDF" onclick="return false;" style="visibility:hidden">
+				Exportar PDF
+				<i class="icon-download-alt"></i>
+			</button>
+		</div>
+		<div id="accordion" class="accordion">
+			<div class="accordion-group">
+	
+				<div id="accordionAdaptar" class="accordion-heading">
+					<a href="#cotizacion-accordion" data-toggle="collapse" class="accordion-toggle collapsed"
+						style="border-top: 1px solid #c5d0dc;"><i class="fa fa-calculator"></i>
+						<span>Cotizaci&oacute;n - Planes</span>
+					</a>
+				</div>
+				<div class="accordion-body collapse" id="cotizacion-accordion">
+					<div class="accordion-inner">
+	
+						<div id="accordion" class="accordion ">
+							<div class="accordion-group">
+								{{#each cotizacion.planes}}
+									<div class="accordion-heading">
+										<a href="#{{trimString this.codigo}}-accordion" data-toggle="collapse" class="accordion-toggle collapsed"
+											style="border-top: 1px solid #c5d0dc;"><i class="fa fa-calculator"></i>
+											<span>{{this.codigo}}</span>
+											
+											<button id="btnSExportarPDF{{this.codigo}}" onclick="$('#btnExportPDF').click();return false;" class="btn btn-danger btn-small pull-right btnCSExportarPDF" style="position:relative;right:4px;display:none" >
+												<i class="fa fa-file-pdf-o icon-on-right bigger-110" style="position:relative;right:3px" ></i>
+											</button>
+											
+											<label id="labelPlanSelected{{this.codigo}}" class="labelPlanSelected pull-right" style="margin-right: 10px;">
+												<input id="planSelected{{this.codigo}}" type="checkbox" name="plan" value="{{this.codigo}}" onclick="$('#hiddenExportPDF').val('{{this.codigo}}');$(this)[0].checked ? $('#btnSExportarPDF{{this.codigo}}').show() : $('#btnSExportarPDF{{this.codigo}}').hide()" />
+												<span class="lbl"></span> 
+											</label>
+											
+										</a>
+									</div>
+									<div class="accordion-body collapse" id="{{trimString this.codigo}}-accordion">
+										<div class="accordion-inner">
+											<table class="table table-striped table-bordered table-hover table-responsive">
+												<tr>
+													<th class="span6 center">Valor Detalle</th>
+													<td class="span6 center">{{numberFormat this.valorDetalle '$0,0.00'}}</td>
+												</tr>
+												<tr>
+													<th class="span6 center">Familiar a Cargo</th>
+													<td class="span6 center">{{numberFormat this.valorFamiliar '$0,0.00'}}</td>
+												</tr>
+												<tr>
+													<th class="span6 center">Valor total del Plan</th>
+													<td class="span6 center">{{numberFormat this.valorTotalPlan '$0,0.00'}}</td>
+												</tr>
+												<tr>
+													<th class="span6 center">Aportes a Descontar</th>
+													<td class="span6 center">({{numberFormat this.valorAporte '$0,0.00'}})</td>
+												</tr>
+												
+												{{#hasRole 'SGI_PAS'}}
+												{{#unless ../ocultarDescuento}}
+												<tr>
+													<th class="span6 center">Descuento Multiproducto</th>
+													<td class="span6 center">({{numberFormat this.valorDescuento '$0,0.00'}})</td>
+												</tr>
+												{{/unless}}
+												{{/hasRole}}
+												
+												<tr>
+													<th class="span6 center">IVA</th>
+													<td class="span6 center">{{numberFormat this.valorIva '$0,0.00'}}</td>
+												</tr>
+												<tr>
+													<th class="span6 center white" style="background: #404040;border-color: #454545;">Total a Pagar</th>
+													<td class="span6 center white" style="background: #404040;border-color: #454545;">{{numberFormat this.valorTotal '$0,0.00'}}</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								{{/each}}
+							</div>
+						</div>
+	
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		* La cotizacion fue creada con el número de tramite {{proceso}}
+		<br/>
+		* Los datos exhibidos en el siguiente reporte son una proximacion de los valores finales, puede variar por ajuste de precios o dependiendo de la fidelidad de los datos brindados al Cotizador.
+		<br/>
+		* Los precios mencionados corresponden a la fecha de: {{fecha}}
+		
+		{{/if}}
+	</div>
+	{{/if}}
+	
+	<script>
+		$("input[type=checkbox]").click(function(event){
+			event.stopPropagation();
+		});
+		
+		$(".btnCSExportarPDF").click(function(event){
+			event.stopPropagation();
+		});
+		$(function () {
+            $('#accordionAdaptar').on("click", function () {
+				var element=$("#step-container-contactar");
+				var cordElement=element.scrollTop();
+				var coords = null;
+				if(cordElement!=0){
+					element.animate({scrollTop: 0});
+					element.animate({scrollTop: 174});
+				}else{
+					coords =  $("#accordion").position();
+					element.animate({scrollTop: coords.top});
+				}
+            });
+		});
+		$(function () {
+		$.extend(jQuery.validator.messages, {
+			required: "Por favor ingrese una bonificacion.",
+			max: jQuery.validator.format("El número ingresado no puede ser menor a la Probabilidad actual ni mayor a 75 %"),
+			min: jQuery.validator.format("El número ingresado no puede ser menor a la Probabilidad actual ni mayor a 75 %")
+		});
+
+		$(function () {
+		$('[data-rel=popover]').popover({ html: true ,
+		placement:"bottom"
+		});   
+	});
+	});
+		
+		
+	</script>
+	

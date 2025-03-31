@@ -1,0 +1,22 @@
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Individuo</th>
+            <th>Sexo</th>
+            <th>Edad</th>
+            <th>Condición</th>
+            <th>Remuneración</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each integrantes}}
+        <tr>
+            <td>{{this.DENO_PAREN}}</td>
+            <td>{{this.SEXO}}</td>
+            <td>{{this.EDAD}}</td>
+            <td>{{#if this.ID_CONDICION}}{{this.DESC_OS}}{{else}}Directo{{/if}}</td>
+            <td>{{#ifNotCond this.REMUNERACION 0}}{{this.REMUNERACION}}{{/ifNotCond}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

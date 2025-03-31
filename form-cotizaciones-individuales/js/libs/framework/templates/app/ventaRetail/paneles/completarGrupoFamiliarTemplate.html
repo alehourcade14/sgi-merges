@@ -1,0 +1,27 @@
+<div class="row-fluid" style="position:relative;top:-22px;margin-bottom:0px !important;transform:scale(0.98)">
+
+	<hr style="margin: 10px 0;">
+	<div class="control-group span3" style="margin-bottom:10px !important;">
+		<label class="control-label" style="text-align:left" style="text-align:left">
+			Zona <i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>
+		</label>
+		<select id="slZonas" name="solicitudCotizacion[zona][id]" data-msg-required="Ingrese la Zona." data-type="integer" class="selectZona">
+			<option value="">Seleccione una zona...</option>
+			{{#each context.zonas}}
+			<option value="{{this.id}}" 
+			{{#ifTwoConditions this.id '==' ../context.context.cotizacion.zona.id '||' this.id '==' ../context.context.cotizacionSeleccionada.0.ZONA}}
+			selected
+			{{/ifTwoConditions}}>
+			{{this.descripcion}}</option>
+			{{/each}}
+
+		</select>
+	</div>
+</div>
+
+<div id="grupoFamiliarContainer" style="position:relative;top:-22px;;margin-bottom:0px !important;transform:scale(0.98)"></div>
+
+<div id="listExAfiliadoContainer"></div>
+
+<script type="text/javascript">
+</script>

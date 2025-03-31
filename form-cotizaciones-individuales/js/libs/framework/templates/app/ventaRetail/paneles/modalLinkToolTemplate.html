@@ -1,0 +1,56 @@
+<style>
+    .inverted-btn {
+        background-color: white;
+        color: #bd362f;
+        border: 2px solid #bd362f;
+    }
+
+    .inverted-btn i {
+        color: #bd362f;
+    }
+</style>
+<div id="modal-form-link-tool" class="modal miModal hide" tabindex="-1"
+    style="width: 50%; margin-left: -25%; margin-top: 4%;">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget-box" style="border-bottom: none;">
+                <div id="header-alert" class="widget-header widget-header-blue widget-header-flat"
+                    style="border-top: none;">
+                    <h4 id="addressValidationTitle" class="lighter dark" style="margin-left: 10px;">¡Ya podés compartir el
+                        Link!</h4>
+                    <span class="widget-toolbar" style="margin-right: 10px;">
+                        <a class="closeModalLinkTool"><i class="icon-remove"></i></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body overflow-visible">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group"
+                    style="margin-left: 10px; margin-right: 10px; display: flex; align-items: center;">
+                    <input type="text" id="linkInput" value="{{link}}" style="width: 80%;" readonly>
+                    <button class="btn btn-danger" id="copiarLink" style="margin-left: 4px;margin-bottom: auto;">
+                        <i class="fa fa-copy" aria-hidden="true"></i>
+                        Copiar
+                    </button>
+                </div>
+                <hr style="margin: 20px 10px;">
+                <div class="control-group" style="display: flex; justify-content: center;">
+                    <button class="btn inverted-btn" id="btnEnviarMailTool" style="margin-right: 20px;">
+                        <i class="icon-envelope bigger-100"></i>
+                        Enviar por Mail
+                    </button>
+                    <button class="btn inverted-btn" id="btnEnviarWhatsapp" style="margin-left: 20px;">
+                        <i class="fa fa-whatsapp"></i>
+                        Enviar por WhatsApp
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="margin-left: 10px; margin-right: 10px;">
+    </div>
+</div>

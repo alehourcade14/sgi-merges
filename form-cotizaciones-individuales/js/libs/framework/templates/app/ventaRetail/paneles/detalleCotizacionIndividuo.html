@@ -1,0 +1,280 @@
+<h4 class="lighter block red">Persona Fisica:</h4>
+<hr style="margin: 10px 0;">
+<br />
+<div class="row-fluid">
+	<div class="control-group span6">
+		<label class="control-label" for="prospecto[apellido]">Apellido<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+		<div class="controls">
+			<div class="span12">
+				<input id="txtApellido" name="prospecto[apellido]"value="{{context.prospecto.apellido}}"  type="text" placeholder="Ingrese el Apellido del prospecto..." class="input-mask-text"/>
+			</div>
+		</div>
+	</div>
+	<div class="control-group span6">
+		<label class="control-label" for="prospecto[nombre]">Nombre<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+		<div class="controls">
+			<div class="span12">
+				<input id="txtNombre" name="prospecto[nombre]"value="{{context.prospecto.nombre}}"  type="text" placeholder="Ingrese el nombre del prospecto..." class="input-mask-text"/>
+			</div>
+		</div>
+	</div>
+</div>
+<!---->
+<div class="row-fluid">
+	<div class="control-group span6">
+		<label class="control-label" for="prospecto[docTipo]">Tipo<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+		<div class="controls">
+			<div class="span12">
+				{{#if isCreate}}
+				<select id="tipoDoc" name="prospecto[docTipo]" value="{{data.docTipo}}"  data-placeholder="Seleccione una opcion..." >
+				<option value="DU" {{#ifCond data.docTipo 'DU'}}selected{{/ifCond}}> DU</option>
+				<option value="LC" {{#ifCond data.docTipo 'LC'}}selected{{/ifCond}}> LC</option>
+				<option value="LE" {{#ifCond data.docTipo 'LE'}}selected{{/ifCond}}> LE</option>
+				<option value="PA" {{#ifCond data.docTipo 'PA'}}selected{{/ifCond}}> PA</option>
+				<option value="CI" {{#ifCond data.docTipo 'CI'}}selected{{/ifCond}}> CI</option>
+				</select>
+				{{else}}
+				<input id="tipoDoc" name="prospecto[docTipo]"value="{{context.prospecto.docTipo}}"  type="text"  class="input-mask-text" readonly/>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+	<div class="control-group span6">
+		<label class="control-label" for="prospecto[docNum]">Documento<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+		<div class="controls">
+			<div class="span12">
+				
+				<input id="txtDocumento" name="prospecto[docNum]" value="{{context.prospecto.docNum}}" type="text" maxlength="9" placeholder="Ingrese el documento..." class="input-mask-numbers" {{#if isCreate}}{{else}}readonly{{/if}} />  
+			</div>
+		</div>
+	</div>
+</div>
+<!---->
+
+	<h4 class="lighter block red">T&eacute;lefonos:</h4>
+	<hr style="margin: 10px 0;">
+	<br />
+	<div class="row-fluid">
+		<div class="control-group span6"id="telCelular">
+			<label class="control-label" for="prospecto[telefonos][celular][numero]"  >Teléfono Celular:</label>
+
+			<div class="controls">
+				<div class="span12">
+					<input id="celPais" maxlength="4"  style='width:2em' type="text"name="prospecto[telefonos][celular][codigo_pais]" value="{{data.telefonos.celular.codigo_pais}}" placeholder="Pais" class="input-mask-numbers"/>
+					<input id="celNac"  maxlength="5"  style='width:3em' type="text" name="prospecto[telefonos][celular][codigo_nacional]" value="{{data.telefonos.celular.codigo_nacional}}" placeholder="Nac." class="input-mask-numbers"/>
+					<input id="celNum"  maxlength="10" style='width:6em' type="text" name="prospecto[telefonos][celular][numero]" value="{{data.telefonos.celular.numero}}" placeholder="Num."  class="input-mask-numbers"/>
+					<input id="celNumExt"  type="hidden" name="prospecto[telefonos][celular][extension]" placeholder="Ext." />
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group span6" id="telPrincipal">
+			<label id="labelTelPrincipalPF" class="control-label" for="prospecto[telefonos][prin][numero]" {{#ifCond data.persTipo 'J'}}style="display: none" {{/ifCond}} >Teléfono Particular:</label>
+			<label id="labelTelPrincipalPJ" class="control-label" for="prospecto[telefonos][prin][numero]" {{#ifCond data.persTipo 'F'}}style="display: none" {{/ifCond}} {{#unless data.persTipo}}style="display: none"{{/unless}}>Teléfono Principal:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="telPrincipalPais"  maxlength="4" style='width:2em' type="text"name="prospecto[telefonos][prin][codigo_pais]" placeholder="Pais" value="{{data.telefonos.prin.codigo_pais}}"  class="input-mask-numbers"/>
+					<input id="telPrincipalNac"  maxlength="5" style='width:3em' type="text" name="prospecto[telefonos][prin][codigo_nacional]" placeholder="Nac." value="{{data.telefonos.prin.codigo_nacional}}"  class="input-mask-numbers"/>
+					<input id="telPrincipalNum"  maxlength="10" style='width:6em' type="text" name="prospecto[telefonos][prin][numero]" placeholder="Num." value="{{data.telefonos.prin.numero}}"  class="input-mask-numbers"/>
+					<input id="telPrincipalExt" maxlength="8" style='width:2em' type="text" name="prospecto[telefonos][prin][extension]" placeholder="Ext." value="{{data.telefonos.prin.extension}}" class="input-mask-numbers"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!---->
+	<div class="row-fluid">
+		<div class="control-group span6" id="telSecundario">
+			<label id="labelTelSecundarioPF" class="control-label" for="prospecto[telefonos][sec][numero]" {{#ifCond data.persTipo 'J'}}style="display: none"{{/ifCond}} >Teléfono Laboral:</label>
+			<label id="labelTelSecundarioPJ" class="control-label" for="prospecto[telefonos][sec][numero]" {{#ifCond data.persTipo 'F'}}style="display: none"{{/ifCond}} {{#unless data.persTipo}}style="display: none"{{/unless}}>Teléfono Secundario:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="telSecPais" maxlength="4" style='width:2em' type="text"name="prospecto[telefonos][sec][codigo_pais]" placeholder="Pais" value="{{data.telefonos.sec.codigo_pais}}"  class="input-mask-numbers"/>
+					<input id="telSecNac"  maxlength="5" style='width:3em' type="text" name="prospecto[telefonos][sec][codigo_nacional]" placeholder="Nac." value="{{data.telefonos.sec.codigo_nacional}}"  class="input-mask-numbers"/>
+					<input id="telSecNum"  maxlength="10" style='width:6em' type="text" name="prospecto[telefonos][sec][numero]" placeholder="Num." value="{{data.telefonos.sec.numero}}"  class="input-mask-numbers"/>
+					<input id="telSecExt" maxlength="8" style='width:2em' type="text" name="prospecto[telefonos][sec][extension]" placeholder="Ext." value="{{data.telefonos.sec.extension}}" class="input-mask-numbers"/>
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group span6" id="telAlternativo">
+			<label class="control-label" for="prospecto[telefonos][alt][numero]">Teléfono Alternativo:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="telAltPais" maxlength="4" style='width:2em' type="text"name="prospecto[telefonos][alt][codigo_pais]" placeholder="Pais" value="{{data.telefonos.alt.codigo_pais}}"  class="input-mask-numbers"/>
+					<input id="telAltNac"  maxlength="5" style='width:3em' type="text" name="prospecto[telefonos][alt][codigo_nacional]" placeholder="Nac." value="{{data.telefonos.alt.codigo_nacional}}"  class="input-mask-numbers"/>
+					<input id="telAltNum"  maxlength="10" style='width:6em' type="text" name="prospecto[telefonos][alt][numero]" placeholder="Num." value="{{data.telefonos.alt.numero}}"  class="input-mask-numbers"/>
+					<input id="telAltExt" maxlength="8" style='width:2em' type="text" name="prospecto[telefonos][alt][extension]" placeholder="Ext." value="{{data.telefonos.alt.extension}}" class="input-mask-numbers"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!---->
+<div class="row-fluid">
+	<div id="errorViewMails" class="span12"></div>
+</div>
+<!---->
+
+	<h4 class="lighter block red">Emails:</h4>
+	<hr style="margin: 10px 0;">
+	<br />
+	<div class="row-fluid">
+		<div class="control-group span6" id="mailPrimario">
+			<label id="labelMailPrimarioPF" class="control-label" for="prospecto[emails][princ][denominacion]" {{#ifCond data.persTipo 'J'}}style="display: none"{{/ifCond}}>Email Particular:</label>
+			<label id="labelMailPrimarioPJ" class="control-label" for="prospecto[emails][princ][denominacion]" {{#ifCond data.persTipo 'F'}}style="display: none"{{/ifCond}} {{#unless data.persTipo}}style="display: none"{{/unless}}>Email Principal:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="mailPrincipal" maxlength="100" name="prospecto[emails][princ][denominacion]" type="email" value="{{data.emails.princ.denominacion}}"  placeholder="Ingrese el mail particular..." />
+				</div>
+			</div>
+		</div>
+			
+		<div class="control-group span6" id="mailSecundario">
+			<label id="labelMailSecundarioPF" class="control-label" for="prospecto[mails][sec][denominacion]" {{#ifCond data.persTipo 'J'}}style="display: none"{{/ifCond}}>Email Laboral:</label>
+			<label id="labelMailSecundarioPJ" class="control-label" for="prospecto[mails][sec][denominacion]" {{#ifCond data.persTipo 'F'}}style="display: none"{{/ifCond}} {{#unless data.persTipo}}style="display: none"{{/unless}}>Email Secundario:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="mailSecundario" type="email" maxlength="100" name="prospecto[emails][sec][denominacion]" value="{{data.emails.sec.denominacion}}" placeholder="Ingrese el mail laboral..." />
+				</div>
+			</div>
+		</div>  
+	</div>
+	<!---->
+
+	<h4 class="lighter block red">Domicilio:
+		<label class="pull-right inline">
+			<small class="muted">Validado:</small>
+			<input id="valid-address" type="checkbox" name="domicilio[validado]" class="ace-switch ace-switch-6" onclick="return false;">
+			<span class="lbl"></span>
+		</label> 
+	</h4>
+	<hr style="margin: 10px 0;">
+	<br />
+	<div class="row-fluid">
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[paisId]">País:</label>
+			<div class="controls">
+				<div class="span12">
+					<select id="pais" name="domicilio[paisId]" >
+						<option value="1">ARGENTINA</option>
+					</select>	
+				</div>
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[provinciaId]">Provincia<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+			<div class="controls">
+				<div class="span12">
+					<select id="prov" name="domicilio[provinciaId]" value="{{data.domicilio.provinciaId}}">
+					</select>
+				</div>
+			</div>
+		</div>  
+	</div>
+	<!---->
+	<div class="row-fluid">		
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[partidoId]">Partido:</label>
+			<div class="controls">
+				<div class="span12">
+					<select id="partido" name="domicilio[partidoId]" value="{{data.domicilio.partidoId}}" > 
+						<option id=""value="" >Partido...</option>
+					</select>
+				</div>
+			</div>
+		</div>  
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[localidadId]">Localidad<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+			<div class="controls">
+				<div class="span12">
+					<select id="loc" name="domicilio[localidadId]" value="{{data.domicilio.localidadId}}" > 
+						<option id="" value="" >Localidad...</option>
+					</select>
+				</div>
+			</div>
+		</div>  
+	</div>
+	<!---->
+	<div class="row-fluid">
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[calle]">Calle<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="street" type="text" name="domicilio[calle]" maxlength="100" value="{{data.domicilio.calle}}"  placeholder="Ingrese la calle..."/>
+				</div>
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[nro]">Número<i class="icon-asterisk red" style="font-size: 10px;vertical-align: 5px;"></i>:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="number" type="text" name="domicilio[nro]" maxlength="8" value="{{data.domicilio.nro}}" placeholder="Ingrese el número..." class="input-mask-numbers"/>
+				</div>
+			</div>
+		</div>  
+	</div>
+	<!---->
+	<div class="row-fluid">		
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[codPostal]">Código Postal:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="cp" type="text" name="domicilio[codPostal]" maxlength="4" value="{{data.domicilio.codPostal}}" placeholder="Ingrese el código postal..." />
+				</div>
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[cpa]">Código Postal Argentino:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="cpa" type="text" name="domicilio[cpa]" maxlength="11" value="{{data.domicilio.cpa}}" placeholder="Ingrese el CPA..." />
+				</div>
+			</div>
+		</div>
+	</div>
+	<!---->
+	<div class="row-fluid">
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[barrio]">Barrio:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="neighbourhood" type="text" name="domicilio[barrio]" value="{{data.domicilio.barrio}}" readonly="true"/>
+				</div>
+			</div>
+		</div>   
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[piso]">Piso:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="floor" type="text" maxlength="10" name="domicilio[piso]" value="{{data.domicilio.piso}}"  placeholder="Ingrese el piso..." />
+				</div>
+			</div>
+		</div>
+	</div>
+	<!---->
+	<div class="row-fluid">
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[oficina]">Oficina:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="office" type="text" maxlength="10" name="domicilio[oficina]" value="{{data.domicilio.oficina}}"  placeholder="Ingrese la oficina..." />
+				</div>
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label" for="domicilio[dto]">Departamento:</label>
+			<div class="controls">
+				<div class="span12">
+					<input id="department" maxlength="4" type="text" name="domicilio[dto]" value="{{data.domicilio.dto}}" placeholder="Ingrese el departamento..." />
+				</div>
+			</div>
+		</div>  
+	</div>
+	<div class="pull-right inline">
+		<span class="span2">
+			<button id="validAddress" class="btn btn-success hide"  type="button">
+				Validar
+			</button>
+		</span>
+	</div>
+

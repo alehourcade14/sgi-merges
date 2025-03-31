@@ -1,0 +1,86 @@
+<style>
+    .dataTables_paginate > ul{
+        display: block !important;
+    }
+    .dataTables_paginate{
+        margin-left: 200px;
+    }
+</style>
+<br/>
+
+<table id='listCotizacionesGrid' class="table table-bordered">
+<thead>
+    <tr>
+        <th class="hidden-480"></th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Fin Vigencia</th>
+        <th>Teléfono</th>
+        <th>Zona</th>
+        <th style="width: 5px"></th>
+    </tr>
+</thead>
+<tbody>
+    {{#each cotizaciones}}
+        <tr data-cotizacion="{{this.NRO_TRAMITE}}" {{#lowDateLessThan this.VIGENCIA_HASTA}}class="alert alert-danger"{{/lowDateLessThan}}>
+            <td>
+                <label class="pull-right inline">
+                    <input id="cotizacionSelected{{@index}}" type="radio" name="cotizacionSelected" value="{{this.NRO_TRAMITE}}" />
+                    <span class="lbl"></span> 
+                </label>
+            </td>
+            <td>{{this.NOMBRE}}</td>
+            <td>{{this.APELLIDO}}</td>
+            
+            <td>{{dateFormat this.VIGENCIA_HASTA 'DD/MM/YYYY'}}</td>
+            <td>{{this.TEL_COD_PAIS}} - {{this.TEL_COD_NACIONAL}} - {{this.TEL_NUMERO}}</td>
+            <td>{{this.DENO_ZONA}}</td>
+            <td>
+                <button class="btn btn-mini wiewGroup" data-title="INTEGRANTES" data-placement='left' data-placement="left" data-rel="popover"
+                    data-content='<div id="derive_content_wrapper{{this.NRO_TRAMITE}}" style="width: 500px;"><div id="groupCot{{this.NRO_TRAMITE}}" class="groupCotContainer" style="width: 500px"></div></div>' 
+                    type="button">
+                    <i class="fa fa-users fa-lg red"></i>
+                </button>
+
+            </td>
+        </tr>
+    {{else}}
+        <tr><td colspan='7'>No se encontraron resultados</td></tr>
+    {{/each}}
+</tbody>
+</table>
+
+{{#if cotizaciones }}
+    <script type="text/javascript">
+        $(function() {
+            var oTable1 = $('#listCotizacionesGrid').dataTable( {
+            "iDisplayLength": 5,
+            "aLengthMenu": [5, 10],
+            "aoColumns": [
+              { "bSortable": false },
+               null,null,null,null,null,null
+            ] } );
+        });
+    </script>
+{{/if}}
+
+<script type="text/javascript">
+    $(function() {
+        
+        $('[data-rel=popover]').popover({html:true});
+        $('[data-rel=tooltip]').tooltip();
+
+        /*
+        $('.wiewGroup').popover({ 
+            html : true,
+            animation: false,
+            placement : 'left',
+            content: function() {
+              var id = $(event.target).closest('tr').data("cotizacion");
+              return '<div id="derive_content_wrapper'+id+'" style="width: 500px;"><div id="groupCot'+id+'" class="groupCotContainer" style="width: 500px"></div></div>';
+            }
+        });
+        */
+    });
+    
+</script>        
