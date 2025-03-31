@@ -155,7 +155,9 @@ define ([
 					acciones.enviarLink=true;
 				}
 
-				if(self.context.viewConfig.taskName === "Entrevistar"){
+				if( self.context.viewConfig.taskName === 'Contactar' ) {
+					acciones.enviarLink=false;
+				} else {
 					acciones.enviarLink=true;
 				}
 
